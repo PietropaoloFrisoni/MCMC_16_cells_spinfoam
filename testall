@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# attach 'valgrind --leak-check=yes' before each bin/... in order to track memory allocations.
+# maybe it is also better to compile in debug mode first  
+
+export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
+
+DATADIR=./data_folder
+
+echo
+echo ////// Running all tests... //////
+echo
+
+echo
+echo // testing FASTWIGXJ...
+bin/test_jsymbols $DATADIR
