@@ -1,7 +1,8 @@
 #include <string>
+#include <iostream>
+
 #include "fastwigxj.h"
 #include "wigxjpf.h"
-#include <iostream>
 
 #include "jsymbols.h"
 
@@ -10,10 +11,10 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-std::cout << "Testing non threaded version" << std::endl;
+std::cout << "\n\n\nTESTING FASTWIG TABLES...\n\n\n" << std::endl;
 
-std::string fastwing_tables_folder = argv[1] ;
+std::string fastwig_tables_folder = argv[1];
  
-test_fastwig(fastwing_tables_folder);  
+test_fastwig(fastwig_tables_folder);  
   
 }

@@ -1,5 +1,7 @@
-#include <iostream>
+#pragma once
 
+#include <iostream>
+#include <string>
 
 class Chain {      
 
@@ -22,26 +24,15 @@ class Chain {
           sigma = sigma_assigned;
           burnin = burnin_assigned;
           store_path = store_path_assigned;
-          std::cout << "chain built with length " <<  length  << std::endl;
+          std::cout << "chain with dspin " << dspin << " built"  << std::endl;
          };        
 
-    ~Chain(){      
-           delete [] chain;
-           delete [] indices;
-           std::cout << "chain destroyed " << std::endl; 
-          };
+   ~Chain(){      
+          delete [] chain;
+          delete [] indices;
+          std::cout << "chain with dspin " << dspin << " destroyed"  << std::endl;
+         };
 
 };
 
-
-int main () {
-
-Chain catenazza(10, 10, 10, 10, "intucul");
-
-std::cout << catenazza.dspin << std::endl;  
-
-catenazza.dspin = 4;
-
-std::cout << catenazza.dspin << std::endl;   
-
-}
+void dmc_run(Chain chain);

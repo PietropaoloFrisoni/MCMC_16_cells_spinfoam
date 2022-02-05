@@ -5,12 +5,11 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-DATADIR=./data_folder
+# this is read as string by main, therefore " " is not necessary
+DATADIR=./data_folder  
 
-echo
-echo ////// Running all tests... //////
-echo
+echo Running all tests... 
 
-echo
-echo // testing FASTWIGXJ...
 bin/test_jsymbols $DATADIR
+
+bin/test_sampler $DATADIR 

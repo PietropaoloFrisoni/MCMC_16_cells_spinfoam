@@ -9,7 +9,6 @@
 #include <gsl/gsl_cdf.h>
 
 
-
 // the PDF of a gaussian rounded to the integers
 static double pdf_gaussian_discrete(int n, double s) {
 
@@ -33,26 +32,14 @@ static double cdf_gaussian_discrete(int n1, int n2, double s) {
 }
 
 
-void funza()
-{
-std::cout << "OPPORCOIZZIO" << std::endl;
-}
-
-int square_2(int i) {
-	
-return i*i;
-  
-}
-
-
-int test_fastwig(std::string fastwing_tables_folder) {
+int test_fastwig(std::string fastwig_tables_folder) {
 
   //TODO Questo fa ALTAMENTE schifo, va migliorato.
   // A fastwing bisogna passare un char * perchè non sa che cazzo sia string
   // Dato che sto allocando sullo stack, non devo liberare memoria 
-  std::string stringa_3j_tmp = fastwing_tables_folder;
-  std::string stringa_6j_tmp = fastwing_tables_folder;
-  std::string stringa_9j_tmp = fastwing_tables_folder;
+  std::string stringa_3j_tmp = fastwig_tables_folder;
+  std::string stringa_6j_tmp = fastwig_tables_folder;
+  std::string stringa_9j_tmp = fastwig_tables_folder;
 
   std::string tmp_string_3j = stringa_3j_tmp.append("/test_table_18.3j"); 
   std::string tmp_string_6j = stringa_6j_tmp.append("/test_table_8.6j"); 

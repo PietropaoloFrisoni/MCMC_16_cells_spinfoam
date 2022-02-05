@@ -27,21 +27,19 @@ endif
 
 LDFLAGS = $(CXXFLAGS) -L$(WIGDIR)/lib/ -L$(FASTWIGDIR)/lib/ -Wl,--no-as-needed -Wl,--allow-shlib-undefined
 
-LDLIBS = -ldl -lgsl -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lquadmath
+LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lquadmath
 
 ###############################################################################################
 
-INCS = src/jsymbols.h
+INCS = src/jsymbols.h src/mcmc.h src/ampl.h src/utilities.h  src/error.h 
 
-_OBJS = libshared.o jsymbols.o
+_OBJS = libshared.o jsymbols.o mcmc.o first_file.o ampl.o 
 
-_TESTS = test_jsymbols
+_TESTS = test_jsymbols test_sampler
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
 TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))
 TOOLS = $(patsubst %,$(BINDIR)/%,$(_TOOLS))
-
-
 
 
 # library/src object files
