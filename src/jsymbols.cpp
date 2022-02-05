@@ -52,8 +52,6 @@ int test_fastwig(std::string fastwig_tables_folder) {
   double val3j, val6j, val9j;
   int i;
 
-  printf ("FASTWIGXJ C/C++ test program\n");
-
   /* Load tables produced during build test. */
   
   fastwigxj_load(fastwing_tables_folder_fullpath_3j,    3, NULL);
@@ -308,6 +306,15 @@ int test_fastwig(std::string fastwig_tables_folder) {
 	
 }
 
+
+
+
+double Wigner_21j_symbol(int dspin1, int dspin2, int dspin3, int dspin4, int dspin5, int dspin6, int dspin7, int dspin8, int dspin9){
+
+   
+
+
+}
 
 
 

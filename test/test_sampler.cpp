@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
 
-std::cout << "\n\n\nTESTING NON-THREADED SAMPLER...\n\n\n" << std::endl;
+std::cout << "\n\nTESTING NON-THREADED SAMPLER...\n\n" << std::endl;
 
 std::string fastwig_tables_folder = argv[1];
 std::string store_path_assigned = argv[1];
