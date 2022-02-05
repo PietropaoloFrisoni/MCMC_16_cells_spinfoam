@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include <complex.h>
 
-#include "config.h"
 
 // Pi
 #ifndef M_PI

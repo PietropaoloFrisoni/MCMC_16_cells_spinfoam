@@ -31,9 +31,9 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 ###############################################################################################
 
-INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/config.h inc/setup.h
+INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/setup.h
 
-_OBJS = libshared.o jsymbols.o mcmc.o first_file.o ampl.o setup.o
+_OBJS = jsymbols.o mcmc.o first_file.o ampl.o setup.o
 
 _TESTS = test_jsymbols test_sampler
 
@@ -42,8 +42,8 @@ TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))
 TOOLS = $(patsubst %,$(BINDIR)/%,$(_TOOLS))
 
 
-# library/src object files     REMOVED $(INCS) AT END LINE
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp 
+# library/src object files 
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCS)
 	@echo "   CXX    $@"
 	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c -o $@ $< 

@@ -3,34 +3,10 @@
 
 #include "fastwigxj.h"
 #include "wigxjpf.h"
-
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_cdf.h>
-
-
-// the PDF of a gaussian rounded to the integers
-static double pdf_gaussian_discrete(int n, double s) {
-
-    return gsl_cdf_gaussian_P((double)n + 0.5, s) - 
-           gsl_cdf_gaussian_P((double)n - 0.5, s);
-
-}
-
-// the CDF of a gaussian rounded to the integers
-static double cdf_gaussian_discrete(int n1, int n2, double s) {
-
-    double r = 0.0;
-    int x = n1;
-    while (x <= n2) {
-        r += pdf_gaussian_discrete(x, s);
-        x++;
-    }
-
-    return r;
-
-}
-
+#include "utilities.h"
+#include "common.h"
+#include "jsymbols.h"
+#include "mcmc.h"
 
 int test_fastwig(std::string fastwig_tables_folder) {
 
@@ -307,14 +283,148 @@ int test_fastwig(std::string fastwig_tables_folder) {
 }
 
 
+// TODO: CONTINUA DA QUI: HO PRESO LA FUNZIONE DI FRANCESCO CHE HASHAVA TUTTI I
+// I SIMBOLI. BISOGNA TOGLIERE I LOOPS SUI BOUNDARY INTERTWINERS ESTERNI E FORSE FARE ALTRO
+double Wigner_21j_symbol(int* key_21j, Chain &chain){
+
+    // loop over all possible boundary intw
+    // TODO: consider parallelize the code
+
+    int ti1, ti2, ti3, ti4; // boundary intw
+    int tb1, tb2, tb3;      // blue spins
+    int tp1, tp2;           // purple spins
+    int tg1, tg2, tl;       // internal virtual spins
+
+    int tb1_min, tb1_max;
+    int tb2_min, tb2_max;
+    int tb3_min, tb3_max;
+    int tp1_min, tp1_max;
+    int tp2_min, tp2_max;
+    int tg1_min, tg1_max;
+    int tg2_min, tg2_max;
+    int tl_min, tl_max;
+
+    double sj1, sj2, sj3, sj4, sj5, sj6, sj7, nj; // loaded symbols
+    double phi, pho; // phases
+    double sji, ci, yi, ti; // building steps for internal symbols
+    double sym, c, y, t;
+    double df;
+
+    int ti_min = 0;
+    int ti_max = 2*chain.dspin;
 
 
-double Wigner_21j_symbol(int dspin1, int dspin2, int dspin3, int dspin4, int dspin5, int dspin6, int dspin7, int dspin8, int dspin9){
+    for (ti1 = ti_min; ti1 <= ti_max; ti1 += 2) {
+    for (ti2 = ti_min; ti2 <= ti_max; ti2 += 2) {
+    for (ti3 = ti_min; ti3 <= ti_max; ti3 += 2) {
+    for (ti4 = ti_min; ti4 <= ti_max; ti4 += 2) {
 
-   
+        tb1_min = 0;
+        tb1_max = 2*chain.dspin;
+
+        for (tb1 = tb1_min; tb1 <= tb1_max; tb1 += 2) {
+
+        tb2_min = abs(tb1 - chain.dspin);
+        tb2_max = tb1 + chain.dspin;
+
+        for (tb2 = tb2_min; tb2 <= tb2_max; tb2 += 2) {
+
+        tb3_min = abs(tb2 - chain.dspin);
+        tb3_max = tb2 + chain.dspin;
+
+        for (tb3 = tb3_min; tb3 <= tb3_max; tb3 += 2) {
+        
+            tp1_min = 0;
+            tp1_max = 2*chain.dspin;
+
+            for (tp1 = tp1_min; tp1 <= tp1_max; tp1 += 2) {
+
+                tp2_min = abs(tp1 - chain.dspin);
+                tp2_max = tp1 + chain.dspin;
+            
+            for (tp2 = tp2_min; tp2 <= tp2_max; tp2 += 2) {
+
+                // now internal sums
+                sym = c = 0.0;
+
+                tg1_min = abs(ti2 - chain.dspin);
+                tg1_max = ti2 + chain.dspin;
+
+                for (tg1 = tg1_min; tg1 <= tg1_max; tg1 += 2) {
+
+                    tg2_min = max(abs(tg1 - chain.dspin), abs(tb2 - chain.dspin));
+                    tg2_max = min(tg1 + chain.dspin, tb2 + chain.dspin);
+            
+                for (tg2 = tg2_min; tg2 <= tg2_max; tg2 += 2) {
+
+                    tl_min = max(abs(ti4 - chain.dspin), abs(tg2 - chain.dspin));
+                    tl_max = min(ti4 + chain.dspin, tg2 + chain.dspin);
+
+                    sji = ci = 0.0;
+
+                    for (tl = tl_min; tl <= tl_max; tl += 2) {
+
+                        // load innermost symbols
+                        sj5 = fw6jja(chain.dspin, ti3, chain.dspin, chain.dspin, ti4, tl);
+                        sj6 = fw6jja(ti4, chain.dspin, tl, tb1, chain.dspin, chain.dspin);
+                        sj7 = fw6jja(tl, chain.dspin, tg2, tb2, chain.dspin, tb1);
+                        nj = fw9jja(tl, chain.dspin, ti3, chain.dspin, ti2, chain.dspin, tg2, tg1, chain.dspin);
+
+                        phi = real_negpow(
+                            2*tl + (chain.dspin + chain.dspin + ti4) + (ti4 + chain.dspin + tl) + // sj5
+                            (ti4 + chain.dspin + chain.dspin)                          + // sj6
+                            (tl + chain.dspin + tb1) + (tg2 + chain.dspin + tb2)       + // sj7
+                            2*tl + (ti3 + chain.dspin + chain.dspin)                     // nj
+                        );
+
+                        df = DIM(tl);
+
+                        comp_sum(df * phi * sj5 * sj6 * sj7 * nj, sji, ci, yi, ti);
+                        
+                    } // tl
+
+                    // build 'upper' symbols 
+                    sj1 = fw6jja(ti2, chain.dspin, chain.dspin, ti1, chain.dspin, tg1);
+                    sj2 = fw6jja(chain.dspin, tp1, chain.dspin, chain.dspin, ti1, tg1);
+                    sj3 = fw6jja(chain.dspin, tb3, tp2, chain.dspin, tg2, tb2);
+                    sj4 = fw6jja(chain.dspin, tp2, tp1, chain.dspin, tg1, tg2);
+
+                    pho = real_negpow(
+                            2*tg1 + (ti1 + chain.dspin + chain.dspin) + (ti2 + chain.dspin + tg1)                    + // sj1
+                            2*tg1 + (ti1 + chain.dspin + tg2) + (tg2 + tp1 + chain.dspin) + (ti1 + chain.dspin + chain.dspin) + // sj2
+                            2*tg2 + 2*tp2 + (tg2 + chain.dspin + tb2) + (tb2 + tb3 + chain.dspin)           + // sj3
+                            2*tp2 + (tg1 + tp1 + chain.dspin)                                        // sj4
+                    );
+
+                    df = DIM(tg1) * DIM(tg2);
+
+                    comp_sum(df * pho * sj1 * sj2 * sj3 * sj4 * sji, sym, c, y, t);
+
+                } // tg2
+                } // tg1
+
+                // symbol computed, global phase absorbed in the partials
+
+                // build the key
+                // HashTable21j_key_t key = { {ti1, ti2, ti3, ti4, tb1, tb2, tb3, tp1, tp2} };
+
+                
+
+            } // tp2
+            } // tp1
+
+        } // tb3
+        } // tb2
+        } // tb1
+
+    } // ti4
+    } // ti3
+    } // ti2
+    } // ti1
+
+
 
 
 }
-
 
 

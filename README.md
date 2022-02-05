@@ -1,1 +1,1 @@
-# Final_project_SC
+# Computation of 16 cell spinfoam amplitude

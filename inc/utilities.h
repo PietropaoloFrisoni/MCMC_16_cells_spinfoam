@@ -4,6 +4,13 @@
 
 #include "error.h"
 
+
+#define S3J(two_j1, two_j2, two_j3, two_m1, two_m2, two_m3) \
+    fw3jja6(two_j1, two_j2, two_j3, two_m1, two_m2, two_m3)
+#define S6J(two_j1, two_j2, two_j3, two_j4, two_j5, two_j6) \
+     fw6jja(two_j1, two_j2, two_j3, two_j4, two_j5, two_j6)
+
+
 ////////////////////////////////////////////////////////////////////////
 // Simple numerical utilities.
 ////////////////////////////////////////////////////////////////////////
