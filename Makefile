@@ -31,7 +31,7 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 ###############################################################################################
 
-INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/config.h 
+INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/config.h inc/setup.h
 
 _OBJS = libshared.o jsymbols.o mcmc.o first_file.o ampl.o setup.o
 

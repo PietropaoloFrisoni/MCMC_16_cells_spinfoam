@@ -17,12 +17,6 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-///////////////////////////////////////////////////////////////
-// Root folder. Set at library initialization.
-///////////////////////////////////////////////////////////////
-
-extern char* DATA_ROOT;
-
 // Dimension of the spin-j representation.
 #define DIM(two_j) ((long)(two_j) + 1)
 

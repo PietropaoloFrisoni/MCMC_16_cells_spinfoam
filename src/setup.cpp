@@ -8,11 +8,12 @@
 #include "utilities.h"
 #include "error.h"
 #include "common.h"
+#include "setup.h"
 
-
-// path of found fastwig tables
 char* FASTWIG_3J_TABLE_PATH;
 char* FASTWIG_6J_TABLE_PATH;
+
+char* DATA_ROOT;
 
 
 // searches for all files in root folder 
@@ -107,4 +108,42 @@ static inline void load_fastwig_tables() {
 static inline void unload_fastwig_tables() {
     fastwigxj_unload(3);
     fastwigxj_unload(6);
+}
+
+
+void init(std::string root_folder_string, int verbosity) {
+
+    char* root_folder = &root_folder_string[0]; 
+
+    // check root folder is accessible
+    DIR *d = opendir(root_folder);
+    if (d == NULL) error("error opening root folder");
+    closedir(d);
+
+    DATA_ROOT = strdup(root_folder);
+    
+    int max_two_spin = 10;
+
+    // initialize wigxjpf
+    wig_table_init(max_two_spin, 6);
+
+    // load fastwig tables
+    find_fastwig_tables(DATA_ROOT);
+    load_fastwig_tables();
+
+}
+
+void release(){
+
+    // wigxjpf
+    wig_table_free();
+
+    // fastwigxj
+    unload_fastwig_tables();
+    
+    // free paths
+    free(DATA_ROOT);
+    free(FASTWIG_6J_TABLE_PATH);
+    free(FASTWIG_3J_TABLE_PATH);
+
 }
