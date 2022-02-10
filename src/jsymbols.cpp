@@ -322,11 +322,9 @@ key_21j[6] = tb3;
 key_21j[7] = tpn1;
 key_21j[8] = tpn2;
 */
+
 double Wigner_21j_symbol(int *key_21j, Chain &chain)
 {
-
-  // loop over all possible boundary intw
-  // TODO: consider parallelize the code
 
   int ti1 = key_21j[0];
   int ti2 = key_21j[1];
@@ -339,11 +337,6 @@ double Wigner_21j_symbol(int *key_21j, Chain &chain)
   int tp2 = key_21j[8]; // purple spins
   int tg1, tg2, tl;     // internal virtual spins
 
-  int tb1_min, tb1_max;
-  int tb2_min, tb2_max;
-  int tb3_min, tb3_max;
-  int tp1_min, tp1_max;
-  int tp2_min, tp2_max;
   int tg1_min, tg1_max;
   int tg2_min, tg2_max;
   int tl_min, tl_max;
@@ -353,12 +346,6 @@ double Wigner_21j_symbol(int *key_21j, Chain &chain)
   double sji, ci, yi, ti;                       // building steps for internal symbols
   double sym, c, y, t;
   double df;
-
-  int ti_min = 0;
-  int ti_max = 2 * chain.dspin;
-
-  tb1_min = 0;
-  tb1_max = 2 * chain.dspin;
 
   // now internal sums
   sym = c = 0.0;
@@ -419,13 +406,8 @@ double Wigner_21j_symbol(int *key_21j, Chain &chain)
 
       comp_sum(df * pho * sj1 * sj2 * sj3 * sj4 * sji, sym, c, y, t);
 
-      return sym;
-
     } // tg2
   }   // tg1
 
-  // symbol computed, global phase absorbed in the partials
-
-  // build the key
-  // HashTable21j_key_t key = { {ti1, ti2, ti3, ti4, tb1, tb2, tb3, tp1, tp2} };
+  return sym;
 }
