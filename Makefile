@@ -18,11 +18,11 @@ FASTWIGDIR = $(EXTDIR)/fastwigxj
 
 ###############################################################################################
 
-# call 'make DEBUG=1' to compile in debug mode
+# call 'make DEBUG=1' to compile in debug mode (FAKE)
 ifeq ($(DEBUG), 1)
 CXXFLAGS =  -std=c++11 -g -O0  -fopenmp -Wall -Og -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/  # debug
 else
-CXXFLAGS =  -std=c++11 -fopenmp -Wall -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ # optimized
+CXXFLAGS =  -std=c++11 -g -fopenmp -Wall -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ # optimized
 endif
 
 LDFLAGS = $(CXXFLAGS) -L$(WIGDIR)/lib/ -L$(FASTWIGDIR)/lib/ -Wl,--no-as-needed -Wl,--allow-shlib-undefined

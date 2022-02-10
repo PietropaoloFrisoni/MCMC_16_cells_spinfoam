@@ -148,6 +148,8 @@ static inline void unload_fastwig_tables() {
 void init(std::string root_folder_string, int verbosity) {
 
     char* root_folder = &root_folder_string[0]; 
+    
+    std::cout << root_folder << std::endl;
 
     // check root folder is accessible
     DIR *d = opendir(root_folder);

@@ -8,31 +8,32 @@
 #include "jsymbols.h"
 #include "mcmc.h"
 
-int test_fastwig(std::string fastwig_tables_folder) {
+int test_fastwig(std::string fastwig_tables_folder)
+{
 
-  //TODO Questo fa ALTAMENTE schifo, va migliorato.
-  // A fastwing bisogna passare un char * perchè non sa che cazzo sia string
-  // Dato che sto allocando sullo stack, non devo liberare memoria 
+  // TODO Questo fa ALTAMENTE schifo, va migliorato.
+  //  A fastwing bisogna passare un char * perchè non sa che cazzo sia string
+  //  Dato che sto allocando sullo stack, non devo liberare memoria
   std::string stringa_3j_tmp = fastwig_tables_folder;
   std::string stringa_6j_tmp = fastwig_tables_folder;
   std::string stringa_9j_tmp = fastwig_tables_folder;
 
-  std::string tmp_string_3j = stringa_3j_tmp.append("/test_table_18.3j"); 
-  std::string tmp_string_6j = stringa_6j_tmp.append("/test_table_8.6j"); 
+  std::string tmp_string_3j = stringa_3j_tmp.append("/test_table_18.3j");
+  std::string tmp_string_6j = stringa_6j_tmp.append("/test_table_8.6j");
   std::string tmp_string_9j = stringa_9j_tmp.append("/test_hashed_3_6_12.9j");
-   
-  const char * fastwing_tables_folder_fullpath_3j = tmp_string_3j.c_str();
-  const char * fastwing_tables_folder_fullpath_6j = tmp_string_6j.c_str();
-  const char * fastwing_tables_folder_fullpath_9j = tmp_string_9j.c_str();
+
+  const char *fastwing_tables_folder_fullpath_3j = tmp_string_3j.c_str();
+  const char *fastwing_tables_folder_fullpath_6j = tmp_string_6j.c_str();
+  const char *fastwing_tables_folder_fullpath_9j = tmp_string_9j.c_str();
 
   double val3j, val6j, val9j;
   int i;
 
   /* Load tables produced during build test. */
-  
-  fastwigxj_load(fastwing_tables_folder_fullpath_3j,    3, NULL);
-  fastwigxj_load(fastwing_tables_folder_fullpath_6j,    6, NULL);
-  fastwigxj_load(fastwing_tables_folder_fullpath_9j,    9, NULL);
+
+  fastwigxj_load(fastwing_tables_folder_fullpath_3j, 3, NULL);
+  fastwigxj_load(fastwing_tables_folder_fullpath_6j, 6, NULL);
+  fastwigxj_load(fastwing_tables_folder_fullpath_9j, 9, NULL);
 
   /* For fallback of 9j to sum-of-6j-products when
    * symbols too large for table.
@@ -43,8 +44,8 @@ int test_fastwig(std::string fastwig_tables_folder) {
 
   /* Large values to allow large 3j and 6j testing. */
   /* More normal use may need instead e.g. 2*100. */
-  wig_table_init(2*10000,9);
-  wig_temp_init(2*10000);
+  wig_table_init(2 * 10000, 9);
+  wig_temp_init(2 * 10000);
 
   /* Note that the arguments to wig3jj, wig6jj and wig9jj are 2*j
    * and 2*m.  To be able to handle half-integer arguments.
@@ -55,35 +56,35 @@ int test_fastwig(std::string fastwig_tables_folder) {
    * (A version which takes the third m exists as fw3jja6).
    */
 
-  val3j = fw3jja(2*  5 , 2*  7 , 2*  5 ,
-		 2*(-3), 2*  5);
+  val3j = fw3jja(2 * 5, 2 * 7, 2 * 5,
+                 2 * (-3), 2 * 5);
 
-  printf ("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
+  printf("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
 
-  val3j = fw3jja(2* 10 , 2* 15 , 2* 10 ,
-		 2*(-3), 2* 12);
+  val3j = fw3jja(2 * 10, 2 * 15, 2 * 10,
+                 2 * (-3), 2 * 12);
 
-  printf ("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
+  printf("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
 
-  val3j = fw3jja6(2*  5 , 2*  7 , 2*  5 ,
-		  2*(-3), 2*  5 , 2*(-2));
+  val3j = fw3jja6(2 * 5, 2 * 7, 2 * 5,
+                  2 * (-3), 2 * 5, 2 * (-2));
 
-  printf ("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
+  printf("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
 
-  val3j = fw3jja6(2* 10 , 2* 15 , 2* 10 ,
-		  2*(-3), 2* 12 , 2*(-9));
+  val3j = fw3jja6(2 * 10, 2 * 15, 2 * 10,
+                  2 * (-3), 2 * 12, 2 * (-9));
 
-  printf ("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
+  printf("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
 
-  val6j = fw6jja(2*  3 , 2*  4 , 2*  2 ,
-		 2*  2 , 2*  2 , 2*  3 );
+  val6j = fw6jja(2 * 3, 2 * 4, 2 * 2,
+                 2 * 2, 2 * 2, 2 * 3);
 
-  printf ("6J{ 3   4   2;  2   2   3}:      %#25.15f\n", val6j);
+  printf("6J{ 3   4   2;  2   2   3}:      %#25.15f\n", val6j);
 
-  val6j = fw6jja(2* 10 , 2* 15 , 2* 10 ,
-		 2*  7 , 2*  7 , 2*  9 );
+  val6j = fw6jja(2 * 10, 2 * 15, 2 * 10,
+                 2 * 7, 2 * 7, 2 * 9);
 
-  printf ("6J{10  15  10;  7   7   9}:      %#25.15f\n", val6j);
+  printf("6J{10  15  10;  7   7   9}:      %#25.15f\n", val6j);
 
   for (i = 0; i < 3; i++)
   {
@@ -94,75 +95,75 @@ int test_fastwig(std::string fastwig_tables_folder) {
      */
 
     if (i == 1)
-      {
-	fastwigxj_dyn_init(3, 128);
-	fastwigxj_dyn_init(6, 128);
-	fastwigxj_dyn_init(9, 128);
-      }
+    {
+      fastwigxj_dyn_init(3, 128);
+      fastwigxj_dyn_init(6, 128);
+      fastwigxj_dyn_init(9, 128);
+    }
 
-    val9j = fw9jja(1,  2,  3,
-		   2,  3,  5,
-		   3,  3,  6);
+    val9j = fw9jja(1, 2, 3,
+                   2, 3, 5,
+                   3, 3, 6);
 
-    printf ("9J{0.5 1 1.5; 1 1.5 2.5; 1.5 1.5 3}:%#22.15f\n", val9j);
+    printf("9J{0.5 1 1.5; 1 1.5 2.5; 1.5 1.5 3}:%#22.15f\n", val9j);
 
     /* The following symbol is too large for the C14N routine. */
 
     val9j = fw9jja(140, 140, 140,
-		   140, 140, 140,
-		   140, 140, 140);
+                   140, 140, 140,
+                   140, 140, 140);
 
-    printf ("9J{70 70 70; 70 70 70; 70 70 70}:%#25.15f\n", val9j);
+    printf("9J{70 70 70; 70 70 70; 70 70 70}:%#25.15f\n", val9j);
 
     /* The following symbol is not in the 9j table, and will
      * automatically go via 6j fallback (through float128).
      */
-  
-    val9j = fw9jja(1,  2,  3,
-		   4,  6,  8,
-		   3,  6,  9);
 
-    printf ("9J{0.5 1 1.5; 2 3 4; 1.5 3 4.5}: %#25.15f\n", val9j);
+    val9j = fw9jja(1, 2, 3,
+                   4, 6, 8,
+                   3, 6, 9);
+
+    printf("9J{0.5 1 1.5; 2 3 4; 1.5 3 4.5}: %#25.15f\n", val9j);
 
     /* This has arguments to become too large for the intermediate
      * index variables in the Rasch-Yu routine, so wont insert into
      * the dynamic table.
      */
 
-    val3j = fw3jja6(2* 8000 , 2* 8000 , 2* 8000 ,
-		    2*    1 , 2*    2 , 2*  (-3));
+    val3j = fw3jja6(2 * 8000, 2 * 8000, 2 * 8000,
+                    2 * 1, 2 * 2, 2 * (-3));
 
-    printf ("3J(8000 8000 8000; 1   2  -3):   %#25.15f\n", val3j);
-
-    /* Not exceeding 64-bit Rasch-Yu index. */
-
-    val3j = fw3jja6(2*  100 , 2*  100 , 2*  100 ,
-		    2*    1 , 2*    2 , 2*  (-3));
-
-    printf ("3J(100 100 100; 1   2  -3):      %#25.15f\n", val3j);
+    printf("3J(8000 8000 8000; 1   2  -3):   %#25.15f\n", val3j);
 
     /* Not exceeding 64-bit Rasch-Yu index. */
 
-    val6j = fw6jja(2*  300 , 2*  400 , 2*  200 ,
-		   2*  200 , 2*  200 , 2*  300 );
+    val3j = fw3jja6(2 * 100, 2 * 100, 2 * 100,
+                    2 * 1, 2 * 2, 2 * (-3));
 
-    printf ("6J{300 400 200;  200 200 300}:   %#25.15f\n", val6j);
+    printf("3J(100 100 100; 1   2  -3):      %#25.15f\n", val3j);
+
+    /* Not exceeding 64-bit Rasch-Yu index. */
+
+    val6j = fw6jja(2 * 300, 2 * 400, 2 * 200,
+                   2 * 200, 2 * 200, 2 * 300);
+
+    printf("6J{300 400 200;  200 200 300}:   %#25.15f\n", val6j);
 
     /* Exceeding 64-bit Rasch-Yu index. */
 
-    val6j = fw6jja(2* 3000 , 2* 4000 , 2* 2000 ,
-		   2* 2000 , 2* 2000 , 2* 3000 );
+    val6j = fw6jja(2 * 3000, 2 * 4000, 2 * 2000,
+                   2 * 2000, 2 * 2000, 2 * 3000);
 
-    printf ("6J{3000 4000 2000;  2000 2000 3000}:%#22.15f\n", val6j);
+    printf("6J{3000 4000 2000;  2000 2000 3000}:%#22.15f\n", val6j);
 
     /* On last round, release values. */
 
     if (i == 2)
-      {
-	fastwigxj_dyn_free(3);
-	fastwigxj_dyn_free(6);
-	fastwigxj_dyn_free(9);
-      }
+    {
+      fastwigxj_dyn_free(3);
+      fastwigxj_dyn_free(6);
+      fastwigxj_dyn_free(9);
+    }
   }
 
   {
@@ -171,47 +172,67 @@ int test_fastwig(std::string fastwig_tables_folder) {
      */
     int arg3j[5], arg6j[6], arg9j[9];
 
-    arg3j[0] = 2*  5;  arg3j[1] = 2*  7;  arg3j[2] = 2*  5;
-    arg3j[3] = 2*(-3); arg3j[4] = 2*  5;
+    arg3j[0] = 2 * 5;
+    arg3j[1] = 2 * 7;
+    arg3j[2] = 2 * 5;
+    arg3j[3] = 2 * (-3);
+    arg3j[4] = 2 * 5;
 
     val3j = fw3jjl(arg3j);
 
-    printf ("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
+    printf("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
 
-    arg3j[0] = 2* 10;  arg3j[1] = 2* 15;  arg3j[2] = 2* 10;
-    arg3j[3] = 2*(-3); arg3j[4] = 2* 12;
-
-    val3j = fw3jjl(arg3j);
-
-    printf ("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
-
-    arg3j[0] = 2* 11;      /* Partial reuse. */
+    arg3j[0] = 2 * 10;
+    arg3j[1] = 2 * 15;
+    arg3j[2] = 2 * 10;
+    arg3j[3] = 2 * (-3);
+    arg3j[4] = 2 * 12;
 
     val3j = fw3jjl(arg3j);
 
-    printf ("3J(11  15  10; -3  12  -9):      %#25.15f\n", val3j);
+    printf("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
 
-    arg6j[0] = 2*  3;  arg6j[1] = 2*  4;  arg6j[2] = 2*  2;
-    arg6j[3] = 2*  2;  arg6j[4] = 2*  2;  arg6j[5] = 2*  3;
+    arg3j[0] = 2 * 11; /* Partial reuse. */
+
+    val3j = fw3jjl(arg3j);
+
+    printf("3J(11  15  10; -3  12  -9):      %#25.15f\n", val3j);
+
+    arg6j[0] = 2 * 3;
+    arg6j[1] = 2 * 4;
+    arg6j[2] = 2 * 2;
+    arg6j[3] = 2 * 2;
+    arg6j[4] = 2 * 2;
+    arg6j[5] = 2 * 3;
 
     val6j = fw6jjl(arg6j);
 
-    printf ("6J{ 3   4   2;  2   2   3}:      %#25.15f\n", val6j);
+    printf("6J{ 3   4   2;  2   2   3}:      %#25.15f\n", val6j);
 
-    arg6j[0] = 2* 10;  arg6j[1] = 2* 15;  arg6j[2] = 2* 10;
-    arg6j[3] = 2*  7;  arg6j[4] = 2*  7;  arg6j[5] = 2*  9;
+    arg6j[0] = 2 * 10;
+    arg6j[1] = 2 * 15;
+    arg6j[2] = 2 * 10;
+    arg6j[3] = 2 * 7;
+    arg6j[4] = 2 * 7;
+    arg6j[5] = 2 * 9;
 
     val6j = fw6jjl(arg6j);
 
-    printf ("6J{10  15  10;  7   7   9}:      %#25.15f\n", val6j);
+    printf("6J{10  15  10;  7   7   9}:      %#25.15f\n", val6j);
 
-    arg9j[0] = 1;  arg9j[1] = 2;  arg9j[2] = 3;
-    arg9j[3] = 4;  arg9j[4] = 6;  arg9j[5] = 8;
-    arg9j[6] = 3;  arg9j[7] = 6;  arg9j[8] = 9;
+    arg9j[0] = 1;
+    arg9j[1] = 2;
+    arg9j[2] = 3;
+    arg9j[3] = 4;
+    arg9j[4] = 6;
+    arg9j[5] = 8;
+    arg9j[6] = 3;
+    arg9j[7] = 6;
+    arg9j[8] = 9;
 
     val9j = fw9jjl(arg9j);
 
-    printf ("9J{0.5 1 1.5; 2 3 4; 1.5 3 4.5}: %#25.15f\n", val9j);
+    printf("9J{0.5 1 1.5; 2 3 4; 1.5 3 4.5}: %#25.15f\n", val9j);
   }
 
   {
@@ -226,20 +247,29 @@ int test_fastwig(std::string fastwig_tables_folder) {
     uint64_t x_2;
     uint64_t x_3;
 
-    arg3j_1[0] = 2*  5;  arg3j_1[1] = 2*  7;  arg3j_1[2] = 2*  5;
-    arg3j_1[3] = 2*(-3); arg3j_1[4] = 2*  5;
+    arg3j_1[0] = 2 * 5;
+    arg3j_1[1] = 2 * 7;
+    arg3j_1[2] = 2 * 5;
+    arg3j_1[3] = 2 * (-3);
+    arg3j_1[4] = 2 * 5;
 
     fw3jj_canon(arg3j_1, &x_1);
     fw3jj_prefetch(x_1);
 
-    arg3j_2[0] = 2* 10;  arg3j_2[1] = 2* 15;  arg3j_2[2] = 2* 10;
-    arg3j_2[3] = 2*(-3); arg3j_2[4] = 2* 12;
+    arg3j_2[0] = 2 * 10;
+    arg3j_2[1] = 2 * 15;
+    arg3j_2[2] = 2 * 10;
+    arg3j_2[3] = 2 * (-3);
+    arg3j_2[4] = 2 * 12;
 
     fw3jj_canon(arg3j_2, &x_2);
     fw3jj_prefetch(x_2);
 
-    arg3j_3[0] = 2* 11;  arg3j_3[1] = 2* 15;  arg3j_3[2] = 2* 10;
-    arg3j_3[3] = 2*(-3); arg3j_3[4] = 2* 12;
+    arg3j_3[0] = 2 * 11;
+    arg3j_3[1] = 2 * 15;
+    arg3j_3[2] = 2 * 10;
+    arg3j_3[3] = 2 * (-3);
+    arg3j_3[4] = 2 * 12;
 
     fw3jj_canon(arg3j_3, &x_3);
     fw3jj_prefetch(x_3);
@@ -248,23 +278,23 @@ int test_fastwig(std::string fastwig_tables_folder) {
      * also, as they are used in case the value is not in the table
      * and a fallback calculation is required.
      */
-    
+
     val3j = fw3jj_get(arg3j_1, x_1);
 
-    printf ("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
+    printf("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
 
     val3j = fw3jj_get(arg3j_2, x_2);
 
-    printf ("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
+    printf("3J(10  15  10; -3  12  -9):      %#25.15f\n", val3j);
 
     val3j = fw3jj_get(arg3j_3, x_3);
 
-    printf ("3J(11  15  10; -3  12  -9):      %#25.15f\n", val3j);
-  } 
+    printf("3J(11  15  10; -3  12  -9):      %#25.15f\n", val3j);
+  }
 
   /* Print statistics. */
 
-  printf ("\n");
+  printf("\n");
   fastwigxj_print_stats();
 
   /* Remove tables from memory. */
@@ -274,157 +304,128 @@ int test_fastwig(std::string fastwig_tables_folder) {
   fastwigxj_unload(9);
 
   /* Release WIGXJPF memory. */
-  
+
   wig_temp_free();
   wig_table_free();
 
   return 0;
-	
 }
 
+/*
+key_21j[0] = ti_1;
+key_21j[1] = ti_2;
+key_21j[2] = ti_3;
+key_21j[3] = ti_4;
+key_21j[4] = tb1;
+key_21j[5] = tb2;
+key_21j[6] = tb3;
+key_21j[7] = tpn1;
+key_21j[8] = tpn2;
+*/
+double Wigner_21j_symbol(int *key_21j, Chain &chain)
+{
 
-// TODO: CONTINUA DA QUI: HO PRESO LA FUNZIONE DI FRANCESCO CHE HASHAVA TUTTI I
-// I SIMBOLI. BISOGNA TOGLIERE I LOOPS SUI BOUNDARY INTERTWINERS ESTERNI E FORSE FARE ALTRO
-double Wigner_21j_symbol(int* key_21j, Chain &chain){
+  // loop over all possible boundary intw
+  // TODO: consider parallelize the code
 
-    // loop over all possible boundary intw
-    // TODO: consider parallelize the code
+  int ti1 = key_21j[0];
+  int ti2 = key_21j[1];
+  int ti3 = key_21j[2];
+  int ti4 = key_21j[3]; // boundary intw
+  int tb1 = key_21j[4];
+  int tb2 = key_21j[5];
+  int tb3 = key_21j[6]; // blue spins
+  int tp1 = key_21j[7];
+  int tp2 = key_21j[8]; // purple spins
+  int tg1, tg2, tl;     // internal virtual spins
 
-    int ti1, ti2, ti3, ti4; // boundary intw
-    int tb1, tb2, tb3;      // blue spins
-    int tp1, tp2;           // purple spins
-    int tg1, tg2, tl;       // internal virtual spins
+  int tb1_min, tb1_max;
+  int tb2_min, tb2_max;
+  int tb3_min, tb3_max;
+  int tp1_min, tp1_max;
+  int tp2_min, tp2_max;
+  int tg1_min, tg1_max;
+  int tg2_min, tg2_max;
+  int tl_min, tl_max;
 
-    int tb1_min, tb1_max;
-    int tb2_min, tb2_max;
-    int tb3_min, tb3_max;
-    int tp1_min, tp1_max;
-    int tp2_min, tp2_max;
-    int tg1_min, tg1_max;
-    int tg2_min, tg2_max;
-    int tl_min, tl_max;
+  double sj1, sj2, sj3, sj4, sj5, sj6, sj7, nj; // loaded symbols
+  double phi, pho;                              // phases
+  double sji, ci, yi, ti;                       // building steps for internal symbols
+  double sym, c, y, t;
+  double df;
 
-    double sj1, sj2, sj3, sj4, sj5, sj6, sj7, nj; // loaded symbols
-    double phi, pho; // phases
-    double sji, ci, yi, ti; // building steps for internal symbols
-    double sym, c, y, t;
-    double df;
+  int ti_min = 0;
+  int ti_max = 2 * chain.dspin;
 
-    int ti_min = 0;
-    int ti_max = 2*chain.dspin;
+  tb1_min = 0;
+  tb1_max = 2 * chain.dspin;
 
+  // now internal sums
+  sym = c = 0.0;
 
-    for (ti1 = ti_min; ti1 <= ti_max; ti1 += 2) {
-    for (ti2 = ti_min; ti2 <= ti_max; ti2 += 2) {
-    for (ti3 = ti_min; ti3 <= ti_max; ti3 += 2) {
-    for (ti4 = ti_min; ti4 <= ti_max; ti4 += 2) {
+  tg1_min = abs(ti2 - chain.dspin);
+  tg1_max = ti2 + chain.dspin;
 
-        tb1_min = 0;
-        tb1_max = 2*chain.dspin;
+  for (tg1 = tg1_min; tg1 <= tg1_max; tg1 += 2)
+  {
 
-        for (tb1 = tb1_min; tb1 <= tb1_max; tb1 += 2) {
+    tg2_min = max(abs(tg1 - chain.dspin), abs(tb2 - chain.dspin));
+    tg2_max = min(tg1 + chain.dspin, tb2 + chain.dspin);
 
-        tb2_min = abs(tb1 - chain.dspin);
-        tb2_max = tb1 + chain.dspin;
+    for (tg2 = tg2_min; tg2 <= tg2_max; tg2 += 2)
+    {
 
-        for (tb2 = tb2_min; tb2 <= tb2_max; tb2 += 2) {
+      tl_min = max(abs(ti4 - chain.dspin), abs(tg2 - chain.dspin));
+      tl_max = min(ti4 + chain.dspin, tg2 + chain.dspin);
 
-        tb3_min = abs(tb2 - chain.dspin);
-        tb3_max = tb2 + chain.dspin;
+      sji = ci = 0.0;
 
-        for (tb3 = tb3_min; tb3 <= tb3_max; tb3 += 2) {
-        
-            tp1_min = 0;
-            tp1_max = 2*chain.dspin;
+      for (tl = tl_min; tl <= tl_max; tl += 2)
+      {
 
-            for (tp1 = tp1_min; tp1 <= tp1_max; tp1 += 2) {
+        // load innermost symbols
+        sj5 = fw6jja(chain.dspin, ti3, chain.dspin, chain.dspin, ti4, tl);
+        sj6 = fw6jja(ti4, chain.dspin, tl, tb1, chain.dspin, chain.dspin);
+        sj7 = fw6jja(tl, chain.dspin, tg2, tb2, chain.dspin, tb1);
+        nj = fw9jja(tl, chain.dspin, ti3, chain.dspin, ti2, chain.dspin, tg2, tg1, chain.dspin);
 
-                tp2_min = abs(tp1 - chain.dspin);
-                tp2_max = tp1 + chain.dspin;
-            
-            for (tp2 = tp2_min; tp2 <= tp2_max; tp2 += 2) {
+        phi = real_negpow(
+            2 * tl + (chain.dspin + chain.dspin + ti4) + (ti4 + chain.dspin + tl) + // sj5
+            (ti4 + chain.dspin + chain.dspin) +                                     // sj6
+            (tl + chain.dspin + tb1) + (tg2 + chain.dspin + tb2) +                  // sj7
+            2 * tl + (ti3 + chain.dspin + chain.dspin)                              // nj
+        );
 
-                // now internal sums
-                sym = c = 0.0;
+        df = DIM(tl);
 
-                tg1_min = abs(ti2 - chain.dspin);
-                tg1_max = ti2 + chain.dspin;
+        comp_sum(df * phi * sj5 * sj6 * sj7 * nj, sji, ci, yi, ti);
 
-                for (tg1 = tg1_min; tg1 <= tg1_max; tg1 += 2) {
+      } // tl
 
-                    tg2_min = max(abs(tg1 - chain.dspin), abs(tb2 - chain.dspin));
-                    tg2_max = min(tg1 + chain.dspin, tb2 + chain.dspin);
-            
-                for (tg2 = tg2_min; tg2 <= tg2_max; tg2 += 2) {
+      // build 'upper' symbols
+      sj1 = fw6jja(ti2, chain.dspin, chain.dspin, ti1, chain.dspin, tg1);
+      sj2 = fw6jja(chain.dspin, tp1, chain.dspin, chain.dspin, ti1, tg1);
+      sj3 = fw6jja(chain.dspin, tb3, tp2, chain.dspin, tg2, tb2);
+      sj4 = fw6jja(chain.dspin, tp2, tp1, chain.dspin, tg1, tg2);
 
-                    tl_min = max(abs(ti4 - chain.dspin), abs(tg2 - chain.dspin));
-                    tl_max = min(ti4 + chain.dspin, tg2 + chain.dspin);
+      pho = real_negpow(
+          2 * tg1 + (ti1 + chain.dspin + chain.dspin) + (ti2 + chain.dspin + tg1) +                             // sj1
+          2 * tg1 + (ti1 + chain.dspin + tg2) + (tg2 + tp1 + chain.dspin) + (ti1 + chain.dspin + chain.dspin) + // sj2
+          2 * tg2 + 2 * tp2 + (tg2 + chain.dspin + tb2) + (tb2 + tb3 + chain.dspin) +                           // sj3
+          2 * tp2 + (tg1 + tp1 + chain.dspin)                                                                   // sj4
+      );
 
-                    sji = ci = 0.0;
+      df = DIM(tg1) * DIM(tg2);
 
-                    for (tl = tl_min; tl <= tl_max; tl += 2) {
+      comp_sum(df * pho * sj1 * sj2 * sj3 * sj4 * sji, sym, c, y, t);
 
-                        // load innermost symbols
-                        sj5 = fw6jja(chain.dspin, ti3, chain.dspin, chain.dspin, ti4, tl);
-                        sj6 = fw6jja(ti4, chain.dspin, tl, tb1, chain.dspin, chain.dspin);
-                        sj7 = fw6jja(tl, chain.dspin, tg2, tb2, chain.dspin, tb1);
-                        nj = fw9jja(tl, chain.dspin, ti3, chain.dspin, ti2, chain.dspin, tg2, tg1, chain.dspin);
+      return sym;
 
-                        phi = real_negpow(
-                            2*tl + (chain.dspin + chain.dspin + ti4) + (ti4 + chain.dspin + tl) + // sj5
-                            (ti4 + chain.dspin + chain.dspin)                          + // sj6
-                            (tl + chain.dspin + tb1) + (tg2 + chain.dspin + tb2)       + // sj7
-                            2*tl + (ti3 + chain.dspin + chain.dspin)                     // nj
-                        );
+    } // tg2
+  }   // tg1
 
-                        df = DIM(tl);
+  // symbol computed, global phase absorbed in the partials
 
-                        comp_sum(df * phi * sj5 * sj6 * sj7 * nj, sji, ci, yi, ti);
-                        
-                    } // tl
-
-                    // build 'upper' symbols 
-                    sj1 = fw6jja(ti2, chain.dspin, chain.dspin, ti1, chain.dspin, tg1);
-                    sj2 = fw6jja(chain.dspin, tp1, chain.dspin, chain.dspin, ti1, tg1);
-                    sj3 = fw6jja(chain.dspin, tb3, tp2, chain.dspin, tg2, tb2);
-                    sj4 = fw6jja(chain.dspin, tp2, tp1, chain.dspin, tg1, tg2);
-
-                    pho = real_negpow(
-                            2*tg1 + (ti1 + chain.dspin + chain.dspin) + (ti2 + chain.dspin + tg1)                    + // sj1
-                            2*tg1 + (ti1 + chain.dspin + tg2) + (tg2 + tp1 + chain.dspin) + (ti1 + chain.dspin + chain.dspin) + // sj2
-                            2*tg2 + 2*tp2 + (tg2 + chain.dspin + tb2) + (tb2 + tb3 + chain.dspin)           + // sj3
-                            2*tp2 + (tg1 + tp1 + chain.dspin)                                        // sj4
-                    );
-
-                    df = DIM(tg1) * DIM(tg2);
-
-                    comp_sum(df * pho * sj1 * sj2 * sj3 * sj4 * sji, sym, c, y, t);
-
-                } // tg2
-                } // tg1
-
-                // symbol computed, global phase absorbed in the partials
-
-                // build the key
-                // HashTable21j_key_t key = { {ti1, ti2, ti3, ti4, tb1, tb2, tb3, tp1, tp2} };
-
-                
-
-            } // tp2
-            } // tp1
-
-        } // tb3
-        } // tb2
-        } // tb1
-
-    } // ti4
-    } // ti3
-    } // ti2
-    } // ti1
-
-
-
-
+  // build the key
+  // HashTable21j_key_t key = { {ti1, ti2, ti3, ti4, tb1, tb2, tb3, tp1, tp2} };
 }
-
-
