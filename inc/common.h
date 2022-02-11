@@ -19,11 +19,11 @@
 // Dimension of the spin-j representation.
 #define DIM(two_j) ((long)(two_j) + 1)
 
-// Converts a dspin to corresponding spin.
-#define SPIN(two_j) ((spin)(two_j) * 0.5)
-
 // Divide an INTEGER dspin by 2 (exact integer divison).
 #define DIV2(two_j) ((int)((two_j) >> 1))
+
+// Squaring macro.
+#define SQ(d) ((d)*(d))
 
 ///////////////////////////////////////////////////////////////
 // Spin labeling and recoupling
