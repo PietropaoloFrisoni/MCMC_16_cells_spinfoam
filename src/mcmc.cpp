@@ -80,7 +80,7 @@ void dmc_run(Chain &chain)
             Cti[(tk - 0) / 2] = Cxk;
         }
     }
-    
+
     double ampl = pce_amplitude_c16(chain);
 
     if (chain.verbosity > 1)

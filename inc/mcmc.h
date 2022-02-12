@@ -11,6 +11,9 @@ public:
   // set dimensionality
   static constexpr int BIN_SIZE = 16;
 
+  // test if the RW actually moved
+  bool RW_monitor;
+
   // coefficient for truncated proposal
   double **Ct;
 
@@ -18,12 +21,11 @@ public:
   int i_max;
   int dim_intertw_space;
 
-  // containers of draws == indices, with space for molteplicity
+  // containers for draws, with space at the end for multeplicity
   int draw[BIN_SIZE + 1];
   int prop_draw[BIN_SIZE + 1];
   int gaussian_draw[BIN_SIZE];
 
-  // old safe style (dynamic arrays)
   double *collected_amplitudes;
   int **collected_draws;
   int dspin;
@@ -37,12 +39,15 @@ public:
   int accepted_moves = 0;
 
   Chain(int dspin_assigned, int length_assigned, double sigma_assigned, int burnin_assigned, std::string store_path_assigned, int verbosity_assigned)
-      : dspin(dspin_assigned), length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
+      : dspin(dspin_assigned), length(length_assigned), sigma(sigma_assigned),
+        burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
   {
 
-    ti_max = 2*dspin;
-    i_max = 0.5*ti_max;
+    ti_max = 2 * dspin;
+    i_max = 0.5 * ti_max;
     dim_intertw_space = (ti_max - 0) / 2 + 1;
+
+    RW_monitor = true;
 
     collected_draws = new int *[length];
 
@@ -67,8 +72,10 @@ public:
     {
       for (int tk = 0; tk <= 2 * dspin; tk += 2)
       {
-        std::cout << "Ct[" << i << "][(" << tk << " - " << 0 << ")/ 2] = " << Ct[i][(tk - 0) / 2] << std::endl;
+        std::cout << "Ct[" << i << "][(" << tk << " - " << 0 << ")/ 2] = " << Ct[i][(tk - 0) / 2] << "\t";
       }
+
+      std::cout << std::endl;
     }
   }
 
@@ -113,6 +120,13 @@ public:
     delete[] collected_draws;
 
     delete[] collected_amplitudes;
+
+    // free the coefficients for truncated proposals
+    for (int i = 0; i < BIN_SIZE; i++)
+    {
+      delete[] Ct[i];
+    }
+    delete[] Ct;
 
     std::cout << "chain with dspin " << dspin << " destroyed" << std::endl;
   };
