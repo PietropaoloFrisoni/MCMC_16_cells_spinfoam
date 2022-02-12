@@ -11,6 +11,6 @@
 
 
 // Computes the amplitude for the 16-CELL model.
-double pce_amplitude_c16(Chain params);
+double pce_amplitude_c16(Chain &chain);
 
 /**********************************************************************/

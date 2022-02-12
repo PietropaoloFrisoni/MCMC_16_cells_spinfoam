@@ -12,6 +12,7 @@
 #include "jsymbols.h"
 #include "utilities.h"
 #include "common.h"
+#include "ampl.h"
 
 // the PDF of a gaussian rounded to the integers
 static double pdf_gaussian_discrete(int n, double s)
@@ -58,6 +59,19 @@ void dmc_run(Chain &chain)
     ran = gsl_rng_alloc(gsl_rng_taus2);
     gsl_rng_set(ran, (uint64_t)(random()));
 
+    wig_thread_temp_init(12);
+
+    double rd;
+    double r0, interval;
+
+    for (int i = 0; i < BIN_SIZE; i++)
+    {
+        interval = (double)(2 * chain.dspin - 0.0) / 2;
+        rd = gsl_rng_uniform(ran);
+        r0 = rd * interval;
+        chain.indices[i] = 2 * ((int)round(r0));
+    }
+
     // precompute the coefficients for truncated proposals
     double **Ct = (double **)malloc(BIN_SIZE * sizeof(double *));
     size_t dimi;
@@ -67,7 +81,6 @@ void dmc_run(Chain &chain)
 
     for (int i = 0; i < BIN_SIZE; i++)
     {
-
         Di = chain.sigma;
         ti_min = 0;
         ti_max = 2 * chain.dspin;
@@ -82,20 +95,34 @@ void dmc_run(Chain &chain)
         int k;
         for (int tk = ti_min; tk <= ti_max; tk += 2)
         {
-
             k = tk * 0.5;
             Cxk = cdf_gaussian_discrete(i_min - k, i_max - k, Di);
             Cti[(tk - ti_min) / 2] = Cxk;
         }
     }
 
-    printf("Di = %f\n", Di);
-    std::cout << "Printing Cx coefficients" << std::endl;
-    for (int q = 0; q < BIN_SIZE; q++)
+    double ampl = pce_amplitude_c16(chain);
+
+    if (chain.verbosity > 1)
     {
-        for (int tk = ti_min; tk <= ti_max; tk += 2)
+        std::cout << "Printing Cx coefficients" << std::endl;
+        for (int q = 0; q < BIN_SIZE; q++)
         {
-          std::cout << "Ct[" << q << "][(" << tk << " - " << ti_min << ")/ 2] = " << Ct[q][(tk - ti_min) / 2] << std::endl;
+            for (int tk = ti_min; tk <= ti_max; tk += 2)
+            {
+                std::cout << "Ct[" << q << "][(" << tk << " - " << ti_min << ")/ 2] = " << Ct[q][(tk - ti_min) / 2] << std::endl;
+            }
         }
+
+        std::cout << "Initial draw is:" << std::endl;
+        for (int i = 0; i < BIN_SIZE; i++)
+        {
+            std::cout << chain.indices[i] << std::endl;
+        }
+
+        std::cout << "Initial amplitude is:" << ampl << std::endl;
     }
+
+
+    wig_temp_free();
 }

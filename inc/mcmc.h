@@ -11,16 +11,16 @@ public:
   // Old and safe style (dynamic arrays)
   double *amplitudes;
   int **draws;
-
   int dspin;
   int length;
   int indices[16];
   double sigma;
   int burnin;
   std::string store_path;
+  int verbosity;
 
-  Chain(int dspin_assigned, int length_assigned, double sigma_assigned, int burnin_assigned, std::string store_path_assigned)
-      : dspin(dspin_assigned), length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), store_path(store_path_assigned)
+  Chain(int dspin_assigned, int length_assigned, double sigma_assigned, int burnin_assigned, std::string store_path_assigned, int verbosity_assigned)
+      : dspin(dspin_assigned), length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
   {
 
     draws = new int *[length];
@@ -32,7 +32,7 @@ public:
       // 16 indices + integer multiplicity of the draw
       draws[i] = new int[17];
     }
-    
+
     amplitudes = new double[length];
   };
 

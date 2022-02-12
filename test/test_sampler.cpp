@@ -13,16 +13,15 @@ int main(int argc, char *argv[])
     // in general I want these two strings to be different!
     std::string fastwig_tables_folder = argv[1];
     std::string store_path_assigned = argv[1];
-    int dspin_assigned = 8;
+    int dspin_assigned = 2;
     int length_assigned = 100;
     double sigma_assigned = 0.3;
     double burnin_assigned = 10;
-
-    int verbosity = 0;
+    int verbosity = 2;
 
     init(fastwig_tables_folder, verbosity);
 
-    Chain test_chain(dspin_assigned, length_assigned, sigma_assigned, burnin_assigned, store_path_assigned);
+    Chain test_chain(dspin_assigned, length_assigned, sigma_assigned, burnin_assigned, store_path_assigned, verbosity);
 
     dmc_run(test_chain);
 
