@@ -40,19 +40,11 @@ static double cdf_gaussian_discrete(int n1, int n2, double s)
 void dmc_run(Chain &chain)
 {
 
-    std::cout << "Starting sampling chain with parameters:\n\nspin = " << chain.dspin << "\nlength = " << chain.length
+    std::cout << "Starting sampling chain with parameters:\n\ndspin = " << chain.dspin << "\nlength = " << chain.length
               << "\nsigma = " << chain.sigma << "\nstore path = " << chain.store_path << std::endl;
-
-    print_matrix(chain.draws, chain.length, 17);
 
     // intialize global seed for random()
     srandom(time(NULL));
-
-    // set dimensionality
-    const int BIN_SIZE = 16;
-
-    // accepted moves
-    int accepted_moves = 0;
 
     // initializes the PRNG
     gsl_rng *ran;
@@ -64,65 +56,44 @@ void dmc_run(Chain &chain)
     double rd;
     double r0, interval;
 
-    for (int i = 0; i < BIN_SIZE; i++)
+    for (int i = 0; i < chain.BIN_SIZE; i++)
     {
         interval = (double)(2 * chain.dspin - 0.0) / 2;
         rd = gsl_rng_uniform(ran);
         r0 = rd * interval;
-        chain.indices[i] = 2 * ((int)round(r0));
+        chain.draw[i] = 2 * ((int)round(r0));
     }
 
     // precompute the coefficients for truncated proposals
-    double **Ct = (double **)malloc(BIN_SIZE * sizeof(double *));
-    size_t dimi;
-    int ti_min, ti_max;
-    int i_min, i_max;
-    float Di;
-
-    for (int i = 0; i < BIN_SIZE; i++)
+    chain.Ct = (double **)malloc(chain.BIN_SIZE * sizeof(double *));
+    for (int i = 0; i < chain.BIN_SIZE; i++)
     {
-        Di = chain.sigma;
-        ti_min = 0;
-        ti_max = 2 * chain.dspin;
-        i_min = ti_min * 0.5;
-        i_max = ti_max * 0.5;
-
-        dimi = (ti_max - ti_min) / 2 + 1;
-        double *Cti = (double *)malloc(dimi * sizeof(double));
-        Ct[i] = Cti;
+        double *Cti = (double *)malloc(chain.dim_intertw_space * sizeof(double));
+        chain.Ct[i] = Cti;
 
         double Cxk;
         int k;
-        for (int tk = ti_min; tk <= ti_max; tk += 2)
+        for (int tk = 0; tk <= chain.ti_max; tk += 2)
         {
             k = tk * 0.5;
-            Cxk = cdf_gaussian_discrete(i_min - k, i_max - k, Di);
-            Cti[(tk - ti_min) / 2] = Cxk;
+            Cxk = cdf_gaussian_discrete(0 - k, chain.i_max - k, chain.sigma);
+            Cti[(tk - 0) / 2] = Cxk;
         }
     }
-
+    
     double ampl = pce_amplitude_c16(chain);
 
     if (chain.verbosity > 1)
     {
         std::cout << "Printing Cx coefficients" << std::endl;
-        for (int q = 0; q < BIN_SIZE; q++)
-        {
-            for (int tk = ti_min; tk <= ti_max; tk += 2)
-            {
-                std::cout << "Ct[" << q << "][(" << tk << " - " << ti_min << ")/ 2] = " << Ct[q][(tk - ti_min) / 2] << std::endl;
-            }
-        }
+        chain.trunc_coeff_print(chain.Ct, chain.dspin);
 
         std::cout << "Initial draw is:" << std::endl;
-        for (int i = 0; i < BIN_SIZE; i++)
-        {
-            std::cout << chain.indices[i] << std::endl;
-        }
+        chain.draw_print(chain.draw);
 
-        std::cout << "Initial amplitude is:" << ampl << std::endl;
+        std::cout << "Initial amplitude is:" << std::endl;
+        chain.ampl_print(&ampl);
     }
-
 
     wig_temp_free();
 }

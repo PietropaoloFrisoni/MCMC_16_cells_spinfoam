@@ -15,25 +15,25 @@ double pce_amplitude_c16(Chain &chain)
     // boundary data
     // spins are to be read counterclockwise
     // starting from top
-    int ti_1 = chain.indices[0];
-    int ti_2 = chain.indices[1];
-    int ti_3 = chain.indices[2];
-    int ti_4 = chain.indices[3];
+    int ti_1 = chain.draw[0];
+    int ti_2 = chain.draw[1];
+    int ti_3 = chain.draw[2];
+    int ti_4 = chain.draw[3];
 
-    int ti_5 = chain.indices[4];
-    int ti_6 = chain.indices[5];
-    int ti_7 = chain.indices[6];
-    int ti_8 = chain.indices[7];
+    int ti_5 = chain.draw[4];
+    int ti_6 = chain.draw[5];
+    int ti_7 = chain.draw[6];
+    int ti_8 = chain.draw[7];
 
-    int ti_9 = chain.indices[8];
-    int ti_10 = chain.indices[9];
-    int ti_11 = chain.indices[10];
-    int ti_12 = chain.indices[11];
+    int ti_9 = chain.draw[8];
+    int ti_10 = chain.draw[9];
+    int ti_11 = chain.draw[10];
+    int ti_12 = chain.draw[11];
 
-    int ti_13 = chain.indices[12];
-    int ti_14 = chain.indices[13];
-    int ti_15 = chain.indices[14];
-    int ti_16 = chain.indices[15];
+    int ti_13 = chain.draw[12];
+    int ti_14 = chain.draw[13];
+    int ti_15 = chain.draw[14];
+    int ti_16 = chain.draw[15];
 
     // I have to assemble the two halves, the top one and the bottom one
     // I sum the quartes NW and NE over purple spins tpn1, tpn2

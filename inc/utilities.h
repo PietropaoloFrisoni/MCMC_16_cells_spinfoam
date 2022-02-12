@@ -127,17 +127,3 @@ static inline int min(int n1, int n2)
 	return n2;
 }
 
-// display a matrix for given rows and columns
-
-static inline void print_matrix(int **matrix, int rows, int cols)
-{
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			std::cout << matrix[i][j] << " ";
-		}
-		
-		std::cout << std::endl;
-	}
-}
