@@ -35,7 +35,7 @@ INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/comm
 
 _OBJS = jsymbols.o mcmc.o first_file.o ampl.o setup.o hash_21j.o
 
-_TESTS = test_jsymbols test_sampler
+_TESTS = test_jsymbols test_sampler Hashing_21j
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
 TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))

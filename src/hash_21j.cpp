@@ -1,7 +1,9 @@
-#pragma once
 
 #include <string>
 #include <iostream>
+
+#include "fastwigxj.h"
+#include "wigxjpf.h"
 
 #include "phmap.h"
 #include "phmap_dump.h"

@@ -34,8 +34,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
-                "${workspaceFolder}/data_folder",
-                "${workspaceFolder}/parallel_hashmap"
+                "${workspaceFolder}/data_folder"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

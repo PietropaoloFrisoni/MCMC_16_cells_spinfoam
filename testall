@@ -13,3 +13,7 @@ echo Running all tests...
 bin/test_jsymbols $DATADIR
 
 bin/test_sampler $DATADIR 
+
+echo Running stamerda
+
+bin/Hashing_21j $DATADIR 
