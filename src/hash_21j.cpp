@@ -28,4 +28,23 @@ void lezzo(){
 
   // and print it
   std::cout << "bill's email is: " << email["bill"] << "\n";
+
+
+   wig_temp_init(2 * 10000);
+
+  /* Note that the arguments to wig3jj, wig6jj and wig9jj are 2*j
+   * and 2*m.  To be able to handle half-integer arguments.
+   *
+   * Also note that for 3j symbols, the third m is not given,
+   * as it is fully redundant (unless trivial-0 symbols are wanted).
+   *
+   * (A version which takes the third m exists as fw3jja6).
+   */
+
+  double val3j = fw3jja(2 * 5, 2 * 7, 2 * 5,
+                 2 * (-3), 2 * 5);
+
+  printf("3J( 5   7   5; -3   5  -2):      %#25.15f\n", val3j);
+
+
 }

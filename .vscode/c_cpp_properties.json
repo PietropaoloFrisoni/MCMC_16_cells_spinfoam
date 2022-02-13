@@ -3,7 +3,11 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/parallel_hashmap/",
+                "${workspaceFolder}/src/",
+                "${workspaceFolder}/ext/fastwigxj/inc/",
+                "${workspaceFolder}/ext/wigxjpf/inc/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
