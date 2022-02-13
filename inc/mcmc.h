@@ -69,7 +69,7 @@ public:
         burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
   {
 
-    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/fanculo.data");
+    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j_symbols_dspin_5");
     h.phmap_load(ar_in);
 
     ti_max = 2 * dspin;

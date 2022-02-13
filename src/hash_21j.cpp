@@ -208,7 +208,7 @@ void Hash_21j_symbols(const int tj)
 
   
 
-  phmap::BinaryOutputArchive ar_out("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j_symbols_dspin_4");
+  phmap::BinaryOutputArchive ar_out("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j_symbols_dspin_5");
   h.phmap_dump(ar_out);
 
   wig_temp_free();

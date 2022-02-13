@@ -12,8 +12,8 @@ echo Running all tests...
 
 # bin/test_jsymbols $DATADIR
 
-#bin/test_sampler $DATADIR 
+bin/test_sampler $DATADIR 
 
-echo Hashing symbols
+#echo Hashing symbols
 
-bin/Hashing_21j $DATADIR 
+#bin/Hashing_21j $DATADIR 

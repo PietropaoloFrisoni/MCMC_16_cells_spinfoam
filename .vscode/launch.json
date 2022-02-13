@@ -32,7 +32,7 @@
             "name": "(gdb) Deb per full project",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Hashing_21j",
+            "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
                 "${workspaceFolder}/data_folder"
             ],
