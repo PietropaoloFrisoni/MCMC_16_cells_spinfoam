@@ -8,7 +8,7 @@
             "name": "(gdb) Deb per prove",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/prove/1D_2D_array_servizi",
+            "program": "${workspaceFolder}/prove/a.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -34,7 +34,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
-                "${workspaceFolder}/data_folder"
+                "${workspaceFolder}/data_folder",
+                "${workspaceFolder}/parallel_hashmap"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

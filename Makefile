@@ -11,18 +11,18 @@ LIBDIR = lib
 BINDIR = bin
 TESTDIR = test
 
-
 # folders for external libraries
 WIGDIR = $(EXTDIR)/wigxjpf
 FASTWIGDIR = $(EXTDIR)/fastwigxj
+
 
 ###############################################################################################
 
 # call 'make DEBUG=1' to compile in debug mode (FAKE)
 ifeq ($(DEBUG), 1)
-CXXFLAGS =  -std=c++11 -g -O0  -fopenmp -Wall -Og -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/  # debug
+CXXFLAGS =  -std=c++11 -g -O0  -fopenmp -Wall -Og -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -Iparallel_hashmap # debug
 else
-CXXFLAGS =  -std=c++11 -g -fopenmp -Wall -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ # optimized
+CXXFLAGS =  -std=c++11 -g -fopenmp -Wall -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(WIGDIR)/inc -Iparallel_hashmap # optimized
 endif
 
 LDFLAGS = $(CXXFLAGS) -L$(WIGDIR)/lib/ -L$(FASTWIGDIR)/lib/ -Wl,--no-as-needed -Wl,--allow-shlib-undefined
@@ -33,7 +33,7 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/setup.h
 
-_OBJS = jsymbols.o mcmc.o first_file.o ampl.o setup.o
+_OBJS = jsymbols.o mcmc.o first_file.o ampl.o setup.o hash_21j.o
 
 _TESTS = test_jsymbols test_sampler
 
