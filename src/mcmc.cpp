@@ -14,6 +14,8 @@
 #include "common.h"
 #include "ampl.h"
 
+
+
 // the PDF of a gaussian rounded to the integers
 static double pdf_gaussian_discrete(int n, double s)
 {
@@ -80,6 +82,10 @@ void dmc_run(Chain &chain)
             Cti[(tk - 0) / 2] = Cxk;
         }
     }
+
+    double sym = chain.pce_amplitude_c16();
+
+    std::cout << sym << std::endl;
 
     double ampl = pce_amplitude_c16(chain);
 

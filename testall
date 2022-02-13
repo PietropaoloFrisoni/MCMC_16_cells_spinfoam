@@ -10,10 +10,10 @@ DATADIR=./data_folder
 
 echo Running all tests... 
 
-bin/test_jsymbols $DATADIR
+# bin/test_jsymbols $DATADIR
 
-bin/test_sampler $DATADIR 
+#bin/test_sampler $DATADIR 
 
-echo Running stamerda
+echo Hashing symbols
 
 bin/Hashing_21j $DATADIR 

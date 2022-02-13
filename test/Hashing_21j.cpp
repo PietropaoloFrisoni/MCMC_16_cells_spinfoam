@@ -13,12 +13,12 @@ int main(int argc, char *argv[])
    // in general I want these two strings to be different!
    std::string fastwig_tables_folder = argv[1];
    std::string store_path_assigned = argv[1];
-   int dspin_assigned = 2;
+   int dspin_assigned = 4;
    int verbosity = 2;
 
    init(fastwig_tables_folder, verbosity);
 
-   lezzo();
+   Hash_21j_symbols(dspin_assigned);
 
    release();
 }
