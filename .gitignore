@@ -31,7 +31,7 @@
 *.out
 *.app
 
-# external folder with wigxjpf and fastwigxj
+# external folder
 ext
 
 # folder with binary files

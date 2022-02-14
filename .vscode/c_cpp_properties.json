@@ -3,8 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/parallel_hashmap/",
+                "${workspaceFolder}/**", //bugged ?
+                "${workspaceFolder}/ext/parallel_hashmap",
                 "${workspaceFolder}/src/",
                 "${workspaceFolder}/ext/fastwigxj/inc/",
                 "${workspaceFolder}/ext/wigxjpf/inc/",

@@ -34,7 +34,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
-                "${workspaceFolder}/data_folder"
+                "${workspaceFolder}/data_folder/fastwig_tables/"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

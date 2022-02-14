@@ -15,11 +15,7 @@ int main(int argc, char *argv[])
     double burnin_assigned = 10;
     int verbosity = 2;
 
-    init(fastwig_tables_folder, verbosity);
-
     Chain test_chain(dspin_assigned, length_assigned, sigma_assigned, burnin_assigned, store_path_assigned, verbosity);
 
     dmc_run(test_chain);
-
-    release();
 }

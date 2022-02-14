@@ -15,14 +15,18 @@ TESTDIR = test
 WIGDIR = $(EXTDIR)/wigxjpf
 FASTWIGDIR = $(EXTDIR)/fastwigxj
 
+# folders with header files for parallel hash tables
+PARALLELHASHMAPDIR = $(EXTDIR)/parallel_hashmap
 
 ###############################################################################################
 
-# call 'make DEBUG=1' to compile in debug mode (FAKE)
+# call 'make DEBUG=1' to compile in debug mode 
 ifeq ($(DEBUG), 1)
-CXXFLAGS =  -std=c++11 -g -O0  -fopenmp -Wall -Og -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -Iparallel_hashmap # debug
+CXXFLAGS =  -std=c++11 -fopenmp -Wall -g -Og -fPIC  \
+            -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(PARALLELHASHMAPDIR) -DDEBUG_ON=1 # debug
 else
-CXXFLAGS =  -std=c++11 -g -fopenmp -Wall -fPIC -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(WIGDIR)/inc -Iparallel_hashmap # optimized
+CXXFLAGS =  -std=c++11 -fopenmp -Wall -fPIC \
+            -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(WIGDIR)/inc -I$(PARALLELHASHMAPDIR) -DDEBUG_OFF=1 # optimized
 endif
 
 LDFLAGS = $(CXXFLAGS) -L$(WIGDIR)/lib/ -L$(FASTWIGDIR)/lib/ -Wl,--no-as-needed -Wl,--allow-shlib-undefined

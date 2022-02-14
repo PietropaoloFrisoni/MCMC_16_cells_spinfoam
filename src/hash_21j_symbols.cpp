@@ -221,8 +221,8 @@ void Hash_21j_symbols(const int tj)
 
   // rough estimate for the number of steps
   int steps = DIM(tj) * DIM(tj) * DIM(tj) * DIM(tj) *
-                 (DIM(tj) + 1) * (DIM(tj) + 1) * (DIM(tj) + 1) * (DIM(tj) + 1) *
-                 (DIM(tj) + 2);
+              (DIM(tj) + 1) * (DIM(tj) + 1) * (DIM(tj) + 1) * (DIM(tj) + 1) *
+              (DIM(tj) + 2);
   int pstep = (int)ceil((double)steps / 100.0);
   int done = 0;
 
