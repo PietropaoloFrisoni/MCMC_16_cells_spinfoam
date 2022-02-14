@@ -15,6 +15,9 @@
 #include "phmap.h"
 #include "phmap_dump.h"
 #include "common.h"
+
+// this must be included even if we don't hash because we need "struct MyKey"
+// TODO change this
 #include "hash_21j_symbols.h"
 
 class Chain

@@ -1,6 +1,3 @@
-#include <string>
-#include <iostream>
-
 #include "hash_21j_symbols.h"
 
 int main(int argc, char *argv[])

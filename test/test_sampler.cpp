@@ -1,9 +1,4 @@
-#include <string>
-#include <iostream>
-
 #include "mcmc.h"
-#include "hash_21j_symbols.h"
-
 
 int main(int argc, char *argv[])
 {

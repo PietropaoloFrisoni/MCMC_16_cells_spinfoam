@@ -1,9 +1,3 @@
-#include <string>
-#include <iostream>
-
-#include "fastwigxj.h"
-#include "wigxjpf.h"
-
 #include "hash_21j_symbols.h"
 
 using namespace std;
