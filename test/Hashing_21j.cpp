@@ -1,8 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "setup.h"
-#include "hash_21j.cpp"
+#include "hash_21j_symbols.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +12,7 @@ int main(int argc, char *argv[])
    // in general I want these two strings to be different!
    std::string fastwig_tables_folder = argv[1];
    std::string store_path_assigned = argv[1];
-   int dspin_assigned = 5;
+   int dspin_assigned = 2;
    int verbosity = 2;
 
    init(fastwig_tables_folder, verbosity);

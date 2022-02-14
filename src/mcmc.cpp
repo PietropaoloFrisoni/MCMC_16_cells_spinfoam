@@ -1,20 +1,4 @@
-#include <iostream>
-#include <typeinfo>
-
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_cdf.h>
-
-#include "fastwigxj.h"
-#include "wigxjpf.h"
-
 #include "mcmc.h"
-#include "jsymbols.h"
-#include "utilities.h"
-#include "common.h"
-#include "ampl.h"
-
-
 
 // the PDF of a gaussian rounded to the integers
 static double pdf_gaussian_discrete(int n, double s)
@@ -46,14 +30,14 @@ void dmc_run(Chain &chain)
               << "\nsigma = " << chain.sigma << "\nstore path = " << chain.store_path << std::endl;
 
     // intialize global seed for random()
+    // TODO move this inside class constructor
     srandom(time(NULL));
 
     // initializes the PRNG
+    // TODO move this inside class constructor
     gsl_rng *ran;
     ran = gsl_rng_alloc(gsl_rng_taus2);
     gsl_rng_set(ran, (uint64_t)(random()));
-
-    wig_thread_temp_init(12);
 
     double rd;
     double r0, interval;
@@ -67,6 +51,7 @@ void dmc_run(Chain &chain)
     }
 
     // precompute the coefficients for truncated proposals
+    // TODO move this inside class constructor
     chain.Ct = (double **)malloc(chain.BIN_SIZE * sizeof(double *));
     for (int i = 0; i < chain.BIN_SIZE; i++)
     {
@@ -85,10 +70,6 @@ void dmc_run(Chain &chain)
 
     double sym = chain.pce_amplitude_c16();
 
-    std::cout << sym << std::endl;
-
-    double ampl = pce_amplitude_c16(chain);
-
     if (chain.verbosity > 1)
     {
         std::cout << "Printing Cx coefficients" << std::endl;
@@ -98,8 +79,6 @@ void dmc_run(Chain &chain)
         chain.draw_print(chain.draw);
 
         std::cout << "Initial amplitude is:" << std::endl;
-        chain.ampl_print(&ampl);
+        chain.ampl_print(&sym);
     }
-
-    wig_temp_free();
 }

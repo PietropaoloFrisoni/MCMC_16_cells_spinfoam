@@ -1,19 +1,14 @@
 #!/bin/bash
 
-# attach 'valgrind --leak-check=yes' before each bin/... in order to track memory allocations.
-# maybe it is also better to compile in debug mode first  
-
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
 # this is read as string by main, therefore " " is not necessary
-DATADIR=./data_folder  
+DATADIR=./data_folder/fastwig_tables/ 
 
 echo Running all tests... 
 
-# bin/test_jsymbols $DATADIR
+ bin/test_jsymbols $DATADIR
 
-bin/test_sampler $DATADIR 
+ bin/test_sampler $DATADIR 
 
-#echo Hashing symbols
-
-# bin/Hashing_21j $DATADIR 
+ bin/Hashing_21j $DATADIR 

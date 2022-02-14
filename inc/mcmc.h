@@ -3,36 +3,48 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <typeinfo>
+
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_cdf.h>
+
+#include "fastwigxj.h"
+#include "wigxjpf.h"
 
 #include "phmap.h"
 #include "phmap_dump.h"
 #include "common.h"
-#include "utilities.h"
-
-
-
-struct MyKey
-{
-    friend size_t hash_value(const MyKey &k) 
-    {
-        return phmap::HashState().combine(0, k.key[0], k.key[1], k.key[2], k.key[3], k.key[4], k.key[5], k.key[6], k.key[7], k.key[8]);
-    }
-
-    bool operator==(const MyKey o) const { return key == o.key; }
-
-    std::array<uint8_t, 9> key;
-};
+#include "hash_21j_symbols.h"
 
 class Chain
 {
 
-public:
+private:
+  // boundary spins
+  uint8_t ti_1, ti_2, ti_3, ti_4,
+      ti_5, ti_6, ti_7, ti_8,
+      ti_9, ti_10, ti_11, ti_12,
+      ti_13, ti_14, ti_15, ti_16;
 
-    using Hash = phmap::flat_hash_map<MyKey, double>;
-    Hash h { 
-    //    { { 1, 4, 5 }, 3.4 },
-    //    { { 3, 4, 6 }, 7.56 }
-    };
+  // bulk virtual spins
+  uint8_t tb1, tb2, tb3, tb4, tb5; // blue spins
+  uint8_t tpn1, tpn2, tps1, tps2;  // purple spins
+
+  // bounds
+  uint8_t tb1_min, tb1_max;
+  uint8_t tb2_min, tb2_max;
+  uint8_t tb3_min, tb3_max;
+  uint8_t tb4_min, tb4_max;
+  uint8_t tb5_min, tb5_max;
+  uint8_t tpn1_min, tpn1_max;
+  uint8_t tpn2_min, tpn2_max;
+  uint8_t tps1_min, tps1_max;
+  uint8_t tps2_min, tps2_max;
+
+public:
+  using Hash = phmap::flat_hash_map<MyKey, double>;
+  Hash h{};
 
   // set dimensionality
   static constexpr int BIN_SIZE = 16;
@@ -69,7 +81,7 @@ public:
         burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
   {
 
-    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j/Hashed_21j_symbols_dspin_3");
+    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/hashed_21j/Hashed_21j_symbols_dspin_2");
     h.phmap_load(ar_in);
 
     ti_max = 2 * dspin;
@@ -111,11 +123,11 @@ public:
   // Prints a draw
   static inline void draw_print(uint8_t *draw)
   {
-    for (size_t i = 0; i < BIN_SIZE; i++)
+    for (int i = 0; i < BIN_SIZE; i++)
     {
-      std::cout << draw[i] << ' ';
+      std::cout << unsigned(draw[i]) << ' ';
     }
-    std::cout << "\t" << draw[16] << std::endl;
+    std::cout << "\t" << unsigned(draw[16]) << std::endl;
   }
 
   // Prints the amplitude
@@ -138,49 +150,34 @@ public:
     }
   }
 
+  double pce_amplitude_c16()
+  {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-double pce_amplitude_c16()
-{
-
-    // TODO TUTTO ANCORA DA OTTIMIZZARE
-
+    // this will be multi-thread
     uint8_t key_21j[9];
 
     // boundary data
     // spins are to be read counterclockwise
     // starting from top
-    int ti_1 = draw[0];
-    int ti_2 = draw[1];
-    int ti_3 = draw[2];
-    int ti_4 = draw[3];
+    ti_1 = draw[0];
+    ti_2 = draw[1];
+    ti_3 = draw[2];
+    ti_4 = draw[3];
 
-    int ti_5 = draw[4];
-    int ti_6 = draw[5];
-    int ti_7 = draw[6];
-    int ti_8 = draw[7];
+    ti_5 = draw[4];
+    ti_6 = draw[5];
+    ti_7 = draw[6];
+    ti_8 = draw[7];
 
-    int ti_9 = draw[8];
-    int ti_10 = draw[9];
-    int ti_11 = draw[10];
-    int ti_12 = draw[11];
+    ti_9 = draw[8];
+    ti_10 = draw[9];
+    ti_11 = draw[10];
+    ti_12 = draw[11];
 
-    int ti_13 = draw[12];
-    int ti_14 = draw[13];
-    int ti_15 = draw[14];
-    int ti_16 = draw[15];
+    ti_13 = draw[12];
+    ti_14 = draw[13];
+    ti_15 = draw[14];
+    ti_16 = draw[15];
 
     // I have to assemble the two halves, the top one and the bottom one
     // I sum the quartes NW and NE over purple spins tpn1, tpn2
@@ -188,21 +185,6 @@ double pce_amplitude_c16()
     // I sum the quartes SW and SE over purple spins tps1, tps2
     // to make the bottom half
     // then I sum the two halves over the 5 blue spins tb1..5
-
-    // bulk virtual spins
-    int tb1, tb2, tb3, tb4, tb5; // blue spins
-    int tpn1, tpn2, tps1, tps2;  // purple spins
-
-    // bounds
-    int tb1_min, tb1_max;
-    int tb2_min, tb2_max;
-    int tb3_min, tb3_max;
-    int tb4_min, tb4_max;
-    int tb5_min, tb5_max;
-    int tpn1_min, tpn1_max;
-    int tpn2_min, tpn2_max;
-    int tps1_min, tps1_max;
-    int tps2_min, tps2_max;
 
     // amplitude with compensated summation
     double ampl, c, y, t;
@@ -213,165 +195,162 @@ double pce_amplitude_c16()
     tb1_min = tb5_min = 0;
     tb1_max = tb5_max = 2 * dspin;
 
-    // khint_t s;
-    // HashTable21j_key_t key;
-
     for (tb1 = tb1_min; tb1 <= tb1_max; tb1 += 2)
     {
 
-        tb2_min = abs(tb1 - dspin);
-        tb2_max = tb1 + dspin;
+      tb2_min = abs(tb1 - dspin);
+      tb2_max = tb1 + dspin;
 
-        for (tb5 = tb5_min; tb5 <= tb5_max; tb5 += 2)
+      for (tb5 = tb5_min; tb5 <= tb5_max; tb5 += 2)
+      {
+
+        tb4_min = abs(tb5 - dspin);
+        tb4_max = tb5 + dspin;
+
+        for (tb2 = tb2_min; tb2 <= tb2_max; tb2 += 2)
         {
+          for (tb4 = tb4_min; tb4 <= tb4_max; tb4 += 2)
+          {
 
-            tb4_min = abs(tb5 - dspin);
-            tb4_max = tb5 + dspin;
+            tb3_min = max(abs(tb2 - dspin), abs(tb4 - dspin));
+            tb3_max = min(tb2 + dspin, tb4 + dspin);
 
-            for (tb2 = tb2_min; tb2 <= tb2_max; tb2 += 2)
+            for (tb3 = tb3_min; tb3 <= tb3_max; tb3 += 2)
             {
-                for (tb4 = tb4_min; tb4 <= tb4_max; tb4 += 2)
+
+              // build half NORTH
+              double aN, cN, yN, tN;
+              aN = cN = 0;
+
+              double aNW, aNE;
+
+              tpn1_min = 0;
+              tpn1_max = 2 * dspin;
+
+              for (tpn1 = tpn1_min; tpn1 <= tpn1_max; tpn1 += 2)
+              {
+
+                tpn2_min = max(abs(tpn1 - dspin), abs(tb3 - dspin));
+                tpn2_max = min(tpn1 + dspin, tb3 + dspin);
+
+                for (tpn2 = tpn2_min; tpn2 <= tpn2_max; tpn2 += 2)
                 {
 
-                    tb3_min = max(abs(tb2 - dspin), abs(tb4 - dspin));
-                    tb3_max = min(tb2 + dspin, tb4 + dspin);
+                  // NW 21j
 
-                    for (tb3 = tb3_min; tb3 <= tb3_max; tb3 += 2)
-                    {
+                  key_21j[0] = ti_1;
+                  key_21j[1] = ti_2;
+                  key_21j[2] = ti_3;
+                  key_21j[3] = ti_4;
+                  key_21j[4] = tb1;
+                  key_21j[5] = tb2;
+                  key_21j[6] = tb3;
+                  key_21j[7] = tpn1;
+                  key_21j[8] = tpn2;
 
-                        // build half NORTH
-                        double aN, cN, yN, tN;
-                        aN = cN = 0;
+                  // aNW = Wigner_21j_symbol(key_21j, chain); // CHECK MEMORY ALLOCATION
 
-                        double aNW, aNE;
+                  aNW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
+                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
-                        tpn1_min = 0;
-                        tpn1_max = 2 * dspin;
+                  // NE 21j
+                  // reflect from left
 
-                        for (tpn1 = tpn1_min; tpn1 <= tpn1_max; tpn1 += 2)
-                        {
+                  key_21j[0] = ti_16;
+                  key_21j[1] = ti_15;
+                  key_21j[2] = ti_14;
+                  key_21j[3] = ti_13;
+                  key_21j[4] = tb5;
+                  key_21j[5] = tb4;
+                  key_21j[6] = tb3;
+                  key_21j[7] = tpn1;
+                  key_21j[8] = tpn2;
 
-                            tpn2_min = max(abs(tpn1 - dspin), abs(tb3 - dspin));
-                            tpn2_max = min(tpn1 + dspin, tb3 + dspin);
+                  aNE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
+                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
-                            for (tpn2 = tpn2_min; tpn2 <= tpn2_max; tpn2 += 2)
-                            {
+                  df = DIM(tpn1) * DIM(tpn2);
 
-                                // NW 21j
+                  comp_sum(df * aNW * aNE, aN, cN, yN, tN);
 
-                                key_21j[0] = ti_1;
-                                key_21j[1] = ti_2;
-                                key_21j[2] = ti_3;
-                                key_21j[3] = ti_4;
-                                key_21j[4] = tb1;
-                                key_21j[5] = tb2;
-                                key_21j[6] = tb3;
-                                key_21j[7] = tpn1;
-                                key_21j[8] = tpn2;
+                } // tpn2
+              }   // tpn1
 
-                               // aNW = Wigner_21j_symbol(key_21j, chain); // CHECK MEMORY ALLOCATION
+              // build half SOUTH
+              double aS, cS, yS, tS;
+              aS = cS = 0;
 
-                               aNW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4], 
-                               key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+              double aSW, aSE;
 
-                                // NE 21j
-                                // reflect from left
+              tps1_min = 0;
+              tps1_max = 2 * dspin;
 
-                                key_21j[0] = ti_16;
-                                key_21j[1] = ti_15;
-                                key_21j[2] = ti_14;
-                                key_21j[3] = ti_13;
-                                key_21j[4] = tb5;
-                                key_21j[5] = tb4;
-                                key_21j[6] = tb3;
-                                key_21j[7] = tpn1;
-                                key_21j[8] = tpn2;
+              for (tps1 = tps1_min; tps1 <= tps1_max; tps1 += 2)
+              {
 
-                                aNE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4], 
-                               key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                tps2_min = max(abs(tps1 - dspin), abs(tb3 - dspin));
+                tps2_max = min(tps1 + dspin, tb3 + dspin);
 
-                                df = DIM(tpn1) * DIM(tpn2);
+                for (tps2 = tps2_min; tps2 <= tps2_max; tps2 += 2)
+                {
 
-                                comp_sum(df * aNW * aNE, aN, cN, yN, tN);
+                  // SW 21j
 
-                            } // tpn2
-                        }     // tpn1
+                  key_21j[0] = ti_8;
+                  key_21j[1] = ti_7;
+                  key_21j[2] = ti_6;
+                  key_21j[3] = ti_5;
+                  key_21j[4] = tb1;
+                  key_21j[5] = tb2;
+                  key_21j[6] = tb3;
+                  key_21j[7] = tps1;
+                  key_21j[8] = tps2;
 
-                        // build half SOUTH
-                        double aS, cS, yS, tS;
-                        aS = cS = 0;
+                  aSW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
+                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
-                        double aSW, aSE;
+                  // SW 21j
 
-                        tps1_min = 0;
-                        tps1_max = 2 * dspin;
+                  key_21j[0] = ti_9;
+                  key_21j[1] = ti_10;
+                  key_21j[2] = ti_11;
+                  key_21j[3] = ti_12;
+                  key_21j[4] = tb5;
+                  key_21j[5] = tb4;
+                  key_21j[6] = tb3;
+                  key_21j[7] = tps1;
+                  key_21j[8] = tps2;
 
-                        for (tps1 = tps1_min; tps1 <= tps1_max; tps1 += 2)
-                        {
+                  aSE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
+                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
-                            tps2_min = max(abs(tps1 - dspin), abs(tb3 - dspin));
-                            tps2_max = min(tps1 + dspin, tb3 + dspin);
+                  df = DIM(tps1) * DIM(tps2);
 
-                            for (tps2 = tps2_min; tps2 <= tps2_max; tps2 += 2)
-                            {
+                  // phase from reflecting back to stored 21j
+                  // ph = real_negpow(
+                  //         (dspin + dspin + tb1) + (tb1 + dspin + tb2) + (tb2 + dspin + tb3) +   // SW 21j
+                  //         (dspin + dspin + tb1) + (tb1 + dspin + tb2) + (tb2 + dspin + tb3) +   // SE 21j ...
+                  //         (dspin + dspin + tps1) + (tps1 + dspin + tps2) + (tps2 + dspin + tb3) //
+                  // );
 
-                                // SW 21j
+                  // simplified
+                  ph = real_negpow(2 * tps1 + 2 * tps2 + 3 * tb3);
 
-                                key_21j[0] = ti_8;
-                                key_21j[1] = ti_7;
-                                key_21j[2] = ti_6;
-                                key_21j[3] = ti_5;
-                                key_21j[4] = tb1;
-                                key_21j[5] = tb2;
-                                key_21j[6] = tb3;
-                                key_21j[7] = tps1;
-                                key_21j[8] = tps2;
+                  comp_sum(ph * df * aSW * aSE, aS, cS, yS, tS);
 
-                                aSW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4], 
-                               key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                } // tps2
+              }   // tps1
 
-                                // SW 21j
+              df = DIM(tb1) * DIM(tb2) * DIM(tb3) * DIM(tb4) * DIM(tb5);
 
-                                key_21j[0] = ti_9;
-                                key_21j[1] = ti_10;
-                                key_21j[2] = ti_11;
-                                key_21j[3] = ti_12;
-                                key_21j[4] = tb5;
-                                key_21j[5] = tb4;
-                                key_21j[6] = tb3;
-                                key_21j[7] = tps1;
-                                key_21j[8] = tps2;
+              // two halves computed, assemble
+              comp_sum(ph * df * aN * aS, ampl, c, y, t);
 
-                                aSE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4], 
-                               key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
-
-                                df = DIM(tps1) * DIM(tps2);
-
-                                // phase from reflecting back to stored 21j
-                                // ph = real_negpow(
-                                //         (dspin + dspin + tb1) + (tb1 + dspin + tb2) + (tb2 + dspin + tb3) +   // SW 21j
-                                //         (dspin + dspin + tb1) + (tb1 + dspin + tb2) + (tb2 + dspin + tb3) +   // SE 21j ...
-                                //         (dspin + dspin + tps1) + (tps1 + dspin + tps2) + (tps2 + dspin + tb3) //
-                                // );
-
-                                // simplified
-                                ph = real_negpow(2 * tps1 + 2 * tps2 + 3 * tb3);
-
-                                comp_sum(ph * df * aSW * aSE, aS, cS, yS, tS);
-
-                            } // tps2
-                        }     // tps1
-
-                        df = DIM(tb1) * DIM(tb2) * DIM(tb3) * DIM(tb4) * DIM(tb5);
-
-                        // two halves computed, assemble
-                        comp_sum(ph * df * aN * aS, ampl, c, y, t);
-
-                    } // tb3
-                }     // tb4
-            }         // tb2
-        }             // tb5
-    }                 // tb1
+            } // tb3
+          }   // tb4
+        }     // tb2
+      }       // tb5
+    }         // tb1
 
     // global dimensional factors
     gdf = sqrt((double)DIM(ti_1) *
@@ -392,50 +371,7 @@ double pce_amplitude_c16()
                (double)DIM(ti_16));
 
     return gdf * ampl;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
 
   ~Chain()
   {

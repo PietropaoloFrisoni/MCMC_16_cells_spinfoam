@@ -31,9 +31,9 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 ###############################################################################################
 
-INCS = inc/jsymbols.h inc/mcmc.h inc/ampl.h inc/utilities.h inc/error.h inc/common.h inc/setup.h
+INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
 
-_OBJS = jsymbols.o mcmc.o first_file.o ampl.o setup.o hash_21j.o
+_OBJS =  mcmc.o  hash_21j_symbols.o
 
 _TESTS = test_jsymbols test_sampler Hashing_21j
 
