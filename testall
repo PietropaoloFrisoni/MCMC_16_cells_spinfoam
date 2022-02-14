@@ -16,4 +16,4 @@ bin/test_sampler $DATADIR
 
 #echo Hashing symbols
 
-#bin/Hashing_21j $DATADIR 
+# bin/Hashing_21j $DATADIR 

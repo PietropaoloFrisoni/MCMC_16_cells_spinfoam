@@ -20,7 +20,7 @@ struct MyKey
 
   bool operator==(const MyKey o) const { return key == o.key; }
 
-  std::array<int, 9> key;
+  std::array<uint8_t, 9> key;
 };
 
 
@@ -44,10 +44,10 @@ void Hash_21j_symbols(const int tj)
   // loop over all possible boundary intw
   // TODO: consider parallelize the code
 
-  int ti1, ti2, ti3, ti4; // boundary intw
-  int tb1, tb2, tb3;      // blue spins
-  int tp1, tp2;           // purple spins
-  int tg1, tg2, tl;       // internal virtual spins
+  uint8_t ti1, ti2, ti3, ti4; // boundary intw
+  uint8_t tb1, tb2, tb3;      // blue spins
+  uint8_t tp1, tp2;           // purple spins
+  uint8_t tg1, tg2, tl;       // internal virtual spins
 
   int tb1_min, tb1_max;
   int tb2_min, tb2_max;

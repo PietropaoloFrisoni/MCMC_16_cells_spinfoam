@@ -20,7 +20,7 @@ struct MyKey
 
     bool operator==(const MyKey o) const { return key == o.key; }
 
-    std::array<int, 9> key;
+    std::array<uint8_t, 9> key;
 };
 
 class Chain
@@ -48,9 +48,9 @@ public:
   int dim_intertw_space;
 
   // containers for draws, with space at the end for multeplicity
-  int draw[BIN_SIZE + 1];
-  int prop_draw[BIN_SIZE + 1];
-  int gaussian_draw[BIN_SIZE];
+  uint8_t draw[BIN_SIZE + 1];
+  uint8_t prop_draw[BIN_SIZE + 1];
+  uint8_t gaussian_draw[BIN_SIZE];
 
   double *collected_amplitudes;
   int **collected_draws;
@@ -69,7 +69,7 @@ public:
         burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
   {
 
-    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j_symbols_dspin_5");
+    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j/Hashed_21j_symbols_dspin_3");
     h.phmap_load(ar_in);
 
     ti_max = 2 * dspin;
@@ -109,7 +109,7 @@ public:
   }
 
   // Prints a draw
-  static inline void draw_print(int *draw)
+  static inline void draw_print(uint8_t *draw)
   {
     for (size_t i = 0; i < BIN_SIZE; i++)
     {
@@ -157,7 +157,7 @@ double pce_amplitude_c16()
 
     // TODO TUTTO ANCORA DA OTTIMIZZARE
 
-    int key_21j[9];
+    uint8_t key_21j[9];
 
     // boundary data
     // spins are to be read counterclockwise
