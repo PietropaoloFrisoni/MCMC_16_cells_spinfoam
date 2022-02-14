@@ -4,17 +4,16 @@
 #include <string>
 #include <vector>
 #include <typeinfo>
+#include <math.h>
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_cdf.h>
 
-#include "fastwigxj.h"
-#include "wigxjpf.h"
-
 #include "phmap.h"
 #include "phmap_dump.h"
 #include "common.h"
+
 
 // this must be included even if we don't hash because we need "struct MyKey"
 // TODO change this
@@ -86,27 +85,28 @@ public:
   int dim_intertw_space;
 
   // containers for draws, with space at the end for multeplicity
-  uint8_t draw[BIN_SIZE + 1];
-  uint8_t prop_draw[BIN_SIZE + 1];
-  uint8_t gaussian_draw[BIN_SIZE];
+  int draw[BIN_SIZE + 1];
+  int prop_draw[BIN_SIZE + 1];
+  int gaussian_draw[BIN_SIZE];
 
   double *collected_amplitudes;
   uint8_t **collected_draws;
-  int dspin;
-  int length;
-  double sigma;
-  int burnin;
-  int verbosity;
+  int const dspin;
+  int const length;
+  double const sigma;
+  int const burnin;
+  int const verbosity;
 
   // accepted moves
-  int accepted_moves = 0;
+  int acceptance_ratio;
+
+  int molteplicity;
 
   Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
         const int length_assigned, const double sigma_assigned, const int burnin_assigned, const int verbosity_assigned)
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
         length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), verbosity(verbosity_assigned)
   {
-
     hashed_tables_path_assigned = hashed_tables_path_assigned + "/Hashed_21j_symbols_dspin_" + std::to_string(dspin);
 
     phmap::BinaryInputArchive ar_in(&hashed_tables_path_assigned[0]);
@@ -115,8 +115,6 @@ public:
     ti_max = 2 * dspin;
     i_max = 0.5 * ti_max;
     dim_intertw_space = (ti_max - 0) / 2 + 1;
-
-    RW_monitor = true;
 
     collected_draws = new uint8_t *[length];
 
@@ -129,9 +127,6 @@ public:
     }
 
     collected_amplitudes = new double[length];
-
-    // set initial molteplicity to 1
-    draw[16] = 1;
 
     tb1_min = tb5_min = 0;
     tb1_max = tb5_max = 2 * dspin;
@@ -158,13 +153,13 @@ public:
   }
 
   // Prints a draw
-  static inline void draw_print(uint8_t *draw)
+  static inline void draw_print(int *draw)
   {
     for (int i = 0; i < BIN_SIZE; i++)
     {
-      std::cout << unsigned(draw[i]) << ' ';
+      std::cout << draw[i] << ' ';
     }
-    std::cout << "\t" << unsigned(draw[16]) << std::endl;
+    std::cout << "\t" << draw[16] << std::endl;
   }
 
   // Prints the amplitude
@@ -190,28 +185,30 @@ public:
   double pce_amplitude_c16()
   {
 
+    // TODO: remove all castings to uint8_t
+
     // boundary data
     // spins are to be read counterclockwise
     // starting from top
-    ti_1 = draw[0];
-    ti_2 = draw[1];
-    ti_3 = draw[2];
-    ti_4 = draw[3];
+    ti_1 = prop_draw[0];
+    ti_2 = prop_draw[1];
+    ti_3 = prop_draw[2];
+    ti_4 = prop_draw[3];
 
-    ti_5 = draw[4];
-    ti_6 = draw[5];
-    ti_7 = draw[6];
-    ti_8 = draw[7];
+    ti_5 = prop_draw[4];
+    ti_6 = prop_draw[5];
+    ti_7 = prop_draw[6];
+    ti_8 = prop_draw[7];
 
-    ti_9 = draw[8];
-    ti_10 = draw[9];
-    ti_11 = draw[10];
-    ti_12 = draw[11];
+    ti_9 = prop_draw[8];
+    ti_10 = prop_draw[9];
+    ti_11 = prop_draw[10];
+    ti_12 = prop_draw[11];
 
-    ti_13 = draw[12];
-    ti_14 = draw[13];
-    ti_15 = draw[14];
-    ti_16 = draw[15];
+    ti_13 = prop_draw[12];
+    ti_14 = prop_draw[13];
+    ti_15 = prop_draw[14];
+    ti_16 = prop_draw[15];
 
     // I have to assemble the two halves, the top one and the bottom one
     // I sum the quartes NW and NE over purple spins tpn1, tpn2
@@ -259,15 +256,15 @@ public:
 
                   // NW 21j
 
-                  key_21j[0] = ti_1;
-                  key_21j[1] = ti_2;
-                  key_21j[2] = ti_3;
-                  key_21j[3] = ti_4;
-                  key_21j[4] = tb1;
-                  key_21j[5] = tb2;
-                  key_21j[6] = tb3;
-                  key_21j[7] = tpn1;
-                  key_21j[8] = tpn2;
+                  key_21j[0] = (uint8_t)ti_1;
+                  key_21j[1] = (uint8_t)ti_2;
+                  key_21j[2] = (uint8_t)ti_3;
+                  key_21j[3] = (uint8_t)ti_4;
+                  key_21j[4] = (uint8_t)tb1;
+                  key_21j[5] = (uint8_t)tb2;
+                  key_21j[6] = (uint8_t)tb3;
+                  key_21j[7] = (uint8_t)tpn1;
+                  key_21j[8] = (uint8_t)tpn2;
 
                   aNW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
@@ -275,15 +272,15 @@ public:
                   // NE 21j
                   // reflect from left
 
-                  key_21j[0] = ti_16;
-                  key_21j[1] = ti_15;
-                  key_21j[2] = ti_14;
-                  key_21j[3] = ti_13;
-                  key_21j[4] = tb5;
-                  key_21j[5] = tb4;
-                  key_21j[6] = tb3;
-                  key_21j[7] = tpn1;
-                  key_21j[8] = tpn2;
+                  key_21j[0] = (uint8_t)ti_16;
+                  key_21j[1] = (uint8_t)ti_15;
+                  key_21j[2] = (uint8_t)ti_14;
+                  key_21j[3] = (uint8_t)ti_13;
+                  key_21j[4] = (uint8_t)tb5;
+                  key_21j[5] = (uint8_t)tb4;
+                  key_21j[6] = (uint8_t)tb3;
+                  key_21j[7] = (uint8_t)tpn1;
+                  key_21j[8] = (uint8_t)tpn2;
 
                   aNE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
@@ -309,30 +306,30 @@ public:
 
                   // SW 21j
 
-                  key_21j[0] = ti_8;
-                  key_21j[1] = ti_7;
-                  key_21j[2] = ti_6;
-                  key_21j[3] = ti_5;
-                  key_21j[4] = tb1;
-                  key_21j[5] = tb2;
-                  key_21j[6] = tb3;
-                  key_21j[7] = tps1;
-                  key_21j[8] = tps2;
+                  key_21j[0] = (uint8_t)ti_8;
+                  key_21j[1] = (uint8_t)ti_7;
+                  key_21j[2] = (uint8_t)ti_6;
+                  key_21j[3] = (uint8_t)ti_5;
+                  key_21j[4] = (uint8_t)tb1;
+                  key_21j[5] = (uint8_t)tb2;
+                  key_21j[6] = (uint8_t)tb3;
+                  key_21j[7] = (uint8_t)tps1;
+                  key_21j[8] = (uint8_t)tps2;
 
                   aSW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
                   // SE 21j
 
-                  key_21j[0] = ti_9;
-                  key_21j[1] = ti_10;
-                  key_21j[2] = ti_11;
-                  key_21j[3] = ti_12;
-                  key_21j[4] = tb5;
-                  key_21j[5] = tb4;
-                  key_21j[6] = tb3;
-                  key_21j[7] = tps1;
-                  key_21j[8] = tps2;
+                  key_21j[0] = (uint8_t)ti_9;
+                  key_21j[1] = (uint8_t)ti_10;
+                  key_21j[2] = (uint8_t)ti_11;
+                  key_21j[3] = (uint8_t)ti_12;
+                  key_21j[4] = (uint8_t)tb5;
+                  key_21j[5] = (uint8_t)tb4;
+                  key_21j[6] = (uint8_t)tb3;
+                  key_21j[7] = (uint8_t)tps1;
+                  key_21j[8] = (uint8_t)tps2;
 
                   aSE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
@@ -408,5 +405,28 @@ public:
     std::cout << "chain with dspin " << dspin << " destroyed" << std::endl;
   };
 };
+
+// the PDF of a gaussian rounded to the integers
+static inline double pdf_gaussian_discrete(int n, double s)
+{
+
+  return gsl_cdf_gaussian_P((double)n + 0.5, s) -
+         gsl_cdf_gaussian_P((double)n - 0.5, s);
+}
+
+// the CDF of a gaussian rounded to the integers
+static inline double cdf_gaussian_discrete(int n1, int n2, double s)
+{
+
+  double r = 0.0;
+  int x = n1;
+  while (x <= n2)
+  {
+    r += pdf_gaussian_discrete(x, s);
+    x++;
+  }
+
+  return r;
+}
 
 void Metropolis_Hastings_run(Chain &chain);
