@@ -45,6 +45,29 @@ private:
   uint8_t tps1_min, tps1_max;
   uint8_t tps2_min, tps2_max;
 
+  // path in which draws will be stored
+  std::string store_path;
+
+  // path in which hashed tables of 21j symbols are stored
+  std::string hashed_tables_path;
+
+  // keys used to recover 21js from hash tables
+  // TODO this will be multi-thread
+  uint8_t key_21j[9];
+
+  // amplitude with compensated summation
+  double ampl, c, y, t;
+
+  double df, gdf, ph;
+
+  // build half NORTH
+  double aN, cN, yN, tN;
+  double aNW, aNE;
+
+  // build half SOUTH
+  double aS, cS, yS, tS;
+  double aSW, aSE;
+
 public:
   using Hash = phmap::flat_hash_map<MyKey, double>;
   Hash h{};
@@ -68,23 +91,25 @@ public:
   uint8_t gaussian_draw[BIN_SIZE];
 
   double *collected_amplitudes;
-  int **collected_draws;
+  uint8_t **collected_draws;
   int dspin;
   int length;
   double sigma;
   int burnin;
-  std::string store_path;
   int verbosity;
 
   // accepted moves
   int accepted_moves = 0;
 
-  Chain(int dspin_assigned, int length_assigned, double sigma_assigned, int burnin_assigned, std::string store_path_assigned, int verbosity_assigned)
-      : dspin(dspin_assigned), length(length_assigned), sigma(sigma_assigned),
-        burnin(burnin_assigned), store_path(store_path_assigned), verbosity(verbosity_assigned)
+  Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
+        const int length_assigned, const double sigma_assigned, const int burnin_assigned, const int verbosity_assigned)
+      : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
+        length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), verbosity(verbosity_assigned)
   {
 
-    phmap::BinaryInputArchive ar_in("/home/frisus95/Scrivania/Final_project/data_folder/hashed_21j/Hashed_21j_symbols_dspin_2");
+    hashed_tables_path_assigned = hashed_tables_path_assigned + "/Hashed_21j_symbols_dspin_" + std::to_string(dspin);
+
+    phmap::BinaryInputArchive ar_in(&hashed_tables_path_assigned[0]);
     h.phmap_load(ar_in);
 
     ti_max = 2 * dspin;
@@ -93,20 +118,29 @@ public:
 
     RW_monitor = true;
 
-    collected_draws = new int *[length];
+    collected_draws = new uint8_t *[length];
 
     // This allocates several little chunks of memory instead of one single block
     // We pre-allocated more than the required memory, so we don't need to re-allocate
     for (int i = 0; i < length; i++)
     {
       // 16 indices + integer multiplicity of the draw
-      collected_draws[i] = new int[BIN_SIZE + 1];
+      collected_draws[i] = new uint8_t[BIN_SIZE + 1];
     }
 
     collected_amplitudes = new double[length];
 
     // set initial molteplicity to 1
     draw[16] = 1;
+
+    tb1_min = tb5_min = 0;
+    tb1_max = tb5_max = 2 * dspin;
+
+    tpn1_min = 0;
+    tpn1_max = 2 * dspin;
+
+    tps1_min = 0;
+    tps1_max = 2 * dspin;
   };
 
   // Prints truncated coefficients
@@ -140,24 +174,21 @@ public:
   }
 
   // Prints all draws and multeplicity
-  static inline void print_draws(int **matrix, int rows)
+  static inline void print_draws(uint8_t **matrix, int rows)
   {
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < BIN_SIZE; j++)
       {
-        std::cout << matrix[i][j] << " ";
+        std::cout << unsigned(matrix[i][j]) << " ";
       }
 
-      std::cout << "\t" << matrix[i][16] << std::endl;
+      std::cout << "\t" << unsigned(matrix[i][16]) << std::endl;
     }
   }
 
   double pce_amplitude_c16()
   {
-
-    // this will be multi-thread
-    uint8_t key_21j[9];
 
     // boundary data
     // spins are to be read counterclockwise
@@ -189,14 +220,7 @@ public:
     // to make the bottom half
     // then I sum the two halves over the 5 blue spins tb1..5
 
-    // amplitude with compensated summation
-    double ampl, c, y, t;
     ampl = c = 0;
-
-    double df, gdf, ph;
-
-    tb1_min = tb5_min = 0;
-    tb1_max = tb5_max = 2 * dspin;
 
     for (tb1 = tb1_min; tb1 <= tb1_max; tb1 += 2)
     {
@@ -222,13 +246,7 @@ public:
             {
 
               // build half NORTH
-              double aN, cN, yN, tN;
               aN = cN = 0;
-
-              double aNW, aNE;
-
-              tpn1_min = 0;
-              tpn1_max = 2 * dspin;
 
               for (tpn1 = tpn1_min; tpn1 <= tpn1_max; tpn1 += 2)
               {
@@ -250,8 +268,6 @@ public:
                   key_21j[6] = tb3;
                   key_21j[7] = tpn1;
                   key_21j[8] = tpn2;
-
-                  // aNW = Wigner_21j_symbol(key_21j, chain); // CHECK MEMORY ALLOCATION
 
                   aNW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
@@ -280,13 +296,7 @@ public:
               }   // tpn1
 
               // build half SOUTH
-              double aS, cS, yS, tS;
               aS = cS = 0;
-
-              double aSW, aSE;
-
-              tps1_min = 0;
-              tps1_max = 2 * dspin;
 
               for (tps1 = tps1_min; tps1 <= tps1_max; tps1 += 2)
               {
@@ -312,7 +322,7 @@ public:
                   aSW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
                                 key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
 
-                  // SW 21j
+                  // SE 21j
 
                   key_21j[0] = ti_9;
                   key_21j[1] = ti_10;
@@ -399,4 +409,4 @@ public:
   };
 };
 
-void dmc_run(Chain &chain);
+void Metropolis_Hastings_run(Chain &chain);

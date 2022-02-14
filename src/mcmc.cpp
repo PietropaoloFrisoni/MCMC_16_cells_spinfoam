@@ -23,11 +23,8 @@ static double cdf_gaussian_discrete(int n1, int n2, double s)
     return r;
 }
 
-void dmc_run(Chain &chain)
+void Metropolis_Hastings_run(Chain &chain)
 {
-
-    std::cout << "Starting sampling chain with parameters:\n\ndspin = " << chain.dspin << "\nlength = " << chain.length
-              << "\nsigma = " << chain.sigma << "\nstore path = " << chain.store_path << std::endl;
 
     // intialize global seed for random()
     // TODO move this inside class constructor
