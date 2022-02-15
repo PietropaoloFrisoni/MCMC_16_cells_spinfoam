@@ -5,6 +5,7 @@
 #include <vector>
 #include <typeinfo>
 #include <math.h>
+#include <filesystem>
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
@@ -84,12 +85,12 @@ public:
   int dim_intertw_space;
 
   // containers for draws, with space at the end for multeplicity
-  int draw[BIN_SIZE + 1];
-  int prop_draw[BIN_SIZE + 1];
+  int draw[BIN_SIZE];
+  int prop_draw[BIN_SIZE];
   int gaussian_draw[BIN_SIZE];
 
   double *collected_amplitudes;
-  uint8_t **collected_draws;
+  int **collected_draws;
   int const dspin;
   int const length;
   double const sigma;
@@ -116,14 +117,14 @@ public:
     i_max = 0.5 * ti_max;
     dim_intertw_space = (ti_max - 0) / 2 + 1;
 
-    collected_draws = new uint8_t *[length];
+    collected_draws = new int *[length];
 
     // This allocates several little chunks of memory instead of one single block
     // We pre-allocated more than the required memory, so we don't need to re-allocate
     for (int i = 0; i < length; i++)
     {
       // 16 indices + integer multiplicity of the draw
-      collected_draws[i] = new uint8_t[BIN_SIZE + 1];
+      collected_draws[i] = new int[BIN_SIZE + 1];
     }
 
     collected_amplitudes = new double[length];
@@ -186,6 +187,34 @@ public:
   {
 
     std::cout << (acceptance_ratio * 100 / length) << "%% of draws have been accepted" << std::endl;
+  }
+
+  void store_draws()
+  {
+
+    store_path = store_path + "/dspin_" + std::to_string(dspin) + "/N_" + std::to_string(length) + "__s_" + std::to_string(sigma) + "__b_" + std::to_string(burnin) + ".csv";
+
+    namespace fs = std::filesystem;
+
+    fs::create_directories(store_path);
+
+    std::ofstream out(store_path);
+
+    for (int i = 0; i < BIN_SIZE; i++)
+    {
+      out << "intertwiner " << std::to_string(i + 1) << ',';
+    }
+
+    out << "draw molteplicity " << '\n';
+
+    for (int i = 0; i < accepted_draws; i++)
+    {
+      for (int j = 0; j <= BIN_SIZE; j++)
+      {
+        out << collected_draws[i][j] << ',';
+      }
+      out << '\n';
+    }
   }
 
   double pce_amplitude_c16()

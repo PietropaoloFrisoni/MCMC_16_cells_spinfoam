@@ -22,10 +22,10 @@ PARALLELHASHMAPDIR = $(EXTDIR)/parallel_hashmap
 
 # call 'make DEBUG=1' to compile in debug mode 
 ifeq ($(DEBUG), 1)
-CXXFLAGS =  -std=c++11 -fopenmp -Wall -g -Og -fPIC  \
+CXXFLAGS =  -std=c++17 -fopenmp -Wall -g -Og -fPIC  \
             -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(PARALLELHASHMAPDIR) -DDEBUG_ON=1 # debug
 else
-CXXFLAGS =  -std=c++11 -fopenmp -O3 -fPIC -march=native -fno-math-errno  \
+CXXFLAGS =  -std=c++17 -fopenmp -O3 -fPIC -march=native -fno-math-errno  \
             -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(PARALLELHASHMAPDIR) -DDEBUG_OFF=1 # optimized
 endif
 

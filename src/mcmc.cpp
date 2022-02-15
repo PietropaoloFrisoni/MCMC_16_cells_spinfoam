@@ -215,9 +215,12 @@ void Metropolis_Hastings_run(Chain &chain)
             continue;
         }
 
-        // TODO final storage
+        // TODO: add final storage?
     }
 
     // chain.print_collected_draws();
     chain.print_statistics();
+
+    chain.store_draws();
+    
 }

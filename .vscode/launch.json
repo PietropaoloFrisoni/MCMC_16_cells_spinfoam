@@ -9,7 +9,12 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/prove/a.out",
-            "args": [],
+            "args": [
+
+                "--std",
+                "c++17",
+
+            ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
@@ -34,6 +39,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
+                "--std",
+                "c++17",
                 
             ],
             "stopAtEntry": false,
