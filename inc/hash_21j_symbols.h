@@ -26,7 +26,6 @@ void Hash_21j_symbols(const int tj);
 // test fastwig tables
 int test_fastwig(std::string fastwing_tables_folder);
 
-
 struct MyKey
 {
   friend size_t hash_value(const MyKey &k)
@@ -36,5 +35,26 @@ struct MyKey
 
   bool operator==(const MyKey o) const { return key == o.key; }
 
+  uint8_t &operator[](int idx) { return key[idx]; }
+
   std::array<uint8_t, 9> key;
 };
+
+/*
+
+struct MyKey
+{
+  friend size_t hash_value(const MyKey &k)
+  {
+    uint64_t x = *((uint64_t *)&k.key[0]);
+    return phmap::HashState().combine(0, x, k.key[8]);
+  }
+
+  uint8_t &operator[](int idx) { return key[idx]; }
+
+  bool operator==(const MyKey o) const { return key == o.key; }
+
+  std::array<uint8_t, 9> key;
+};
+
+*/

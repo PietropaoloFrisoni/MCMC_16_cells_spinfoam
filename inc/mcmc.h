@@ -190,12 +190,11 @@ public:
 
   double pce_amplitude_c16()
   {
-
-    // TODO: remove all castings to uint8_t
-
     // boundary data
     // spins are to be read counterclockwise
     // starting from top
+
+    // TODO: not completely efficient
     ti_1 = prop_draw[0];
     ti_2 = prop_draw[1];
     ti_3 = prop_draw[2];
@@ -251,14 +250,24 @@ public:
               // build half NORTH
               aN = cN = 0;
 
+              MyKey kNW{ti_1, ti_2, ti_3, ti_4, tb1,
+                        tb2, tb3, 0, 0};
+
+              MyKey kNE{ti_16, ti_15, ti_14, ti_13, tb5,
+                        tb4, tb3, 0, 0};
+
               for (tpn1 = tpn1_min; tpn1 <= tpn1_max; tpn1 += 2)
               {
 
                 tpn2_min = max(abs(tpn1 - dspin), abs(tb3 - dspin));
                 tpn2_max = min(tpn1 + dspin, tb3 + dspin);
 
+                kNW[7] = kNE[7] = tpn1;
+
                 for (tpn2 = tpn2_min; tpn2 <= tpn2_max; tpn2 += 2)
                 {
+
+                  kNW[8] = kNE[8] = tpn2;
 
                   // NW 21j
 
@@ -268,12 +277,11 @@ public:
                   //     key_21j[3] = (uint8_t)ti_4;
                   //     key_21j[4] = (uint8_t)tb1;
                   //     key_21j[5] = (uint8_t)tb2;
-                  //    key_21j[6] = (uint8_t)tb3;
+                  //     key_21j[6] = (uint8_t)tb3;
                   //     key_21j[7] = (uint8_t)tpn1;
                   //     key_21j[8] = (uint8_t)tpn2;
 
-                  aNW = h[MyKey{ti_1, ti_2, ti_3, ti_4, tb1,
-                                tb2, tb3, tpn1, tpn2}];
+                  aNW = h[kNW];
 
                   // NE 21j
                   // reflect from left
@@ -282,14 +290,13 @@ public:
                   //     key_21j[1] = (uint8_t)ti_15;
                   //     key_21j[2] = (uint8_t)ti_14;
                   //     key_21j[3] = (uint8_t)ti_13;
-                  //      key_21j[4] = (uint8_t)tb5;
-                  //      key_21j[5] = (uint8_t)tb4;
-                  //      key_21j[6] = (uint8_t)tb3;
-                  //      key_21j[7] = (uint8_t)tpn1;
-                  //      key_21j[8] = (uint8_t)tpn2;
+                  //     key_21j[4] = (uint8_t)tb5;
+                  //     key_21j[5] = (uint8_t)tb4;
+                  //     key_21j[6] = (uint8_t)tb3;
+                  //     key_21j[7] = (uint8_t)tpn1;
+                  //     key_21j[8] = (uint8_t)tpn2;
 
-                  aNE = h[MyKey{ti_16, ti_15, ti_14, ti_13, tb5,
-                                tb4, tb3, tpn1, tpn2}];
+                  aNE = h[kNE];
 
                   df = DIM(tpn1) * DIM(tpn2);
 
@@ -301,44 +308,52 @@ public:
               // build half SOUTH
               aS = cS = 0;
 
+              MyKey kSW{ti_8, ti_7, ti_6, ti_5, tb1,
+                        tb2, tb3, 0, 0};
+
+              MyKey kSE{ti_9, ti_10, ti_11, ti_12, tb5,
+                        tb4, tb3, 0, 0};
+
               for (tps1 = tps1_min; tps1 <= tps1_max; tps1 += 2)
               {
 
                 tps2_min = max(abs(tps1 - dspin), abs(tb3 - dspin));
                 tps2_max = min(tps1 + dspin, tb3 + dspin);
 
+                kSW[7] = kSE[7] = tps1;
+
                 for (tps2 = tps2_min; tps2 <= tps2_max; tps2 += 2)
                 {
 
+                  kSW[8] = kSE[8] = tps2;
+
                   // SW 21j
 
-                  //      key_21j[0] = (uint8_t)ti_8;
-                  //     key_21j[1] = (uint8_t)ti_7;
+                  //    key_21j[0] = (uint8_t)ti_8;
+                  //    key_21j[1] = (uint8_t)ti_7;
                   //    key_21j[2] = (uint8_t)ti_6;
-                  //       key_21j[3] = (uint8_t)ti_5;
-                  //       key_21j[4] = (uint8_t)tb1;
-                  //      key_21j[5] = (uint8_t)tb2;
-                  //      key_21j[6] = (uint8_t)tb3;
-                  //       key_21j[7] = (uint8_t)tps1;
-                  //       key_21j[8] = (uint8_t)tps2;
+                  //    key_21j[3] = (uint8_t)ti_5;
+                  //    key_21j[4] = (uint8_t)tb1;
+                  //    key_21j[5] = (uint8_t)tb2;
+                  //    key_21j[6] = (uint8_t)tb3;
+                  //    key_21j[7] = (uint8_t)tps1;
+                  //    key_21j[8] = (uint8_t)tps2;
 
-                  aSW = h[MyKey{ti_8, ti_7, ti_6, ti_5, tb1,
-                                tb2, tb3, tps1, tps2}];
+                  aSW = h[kSW];
 
                   // SE 21j
 
-                  //  key_21j[0] = (uint8_t)ti_9;
-                  //  key_21j[1] = (uint8_t)ti_10;
-                  //  key_21j[2] = (uint8_t)ti_11;
-                  //  key_21j[3] = (uint8_t)ti_12;
-                  //  key_21j[4] = (uint8_t)tb5;
-                  //  key_21j[5] = (uint8_t)tb4;
-                  //  key_21j[6] = (uint8_t)tb3;
-                  //   key_21j[7] = (uint8_t)tps1;
-                  //   key_21j[8] = (uint8_t)tps2;
+                  //    key_21j[0] = (uint8_t)ti_9;
+                  //    key_21j[1] = (uint8_t)ti_10;
+                  //    key_21j[2] = (uint8_t)ti_11;
+                  //    key_21j[3] = (uint8_t)ti_12;
+                  //    key_21j[4] = (uint8_t)tb5;
+                  //    key_21j[5] = (uint8_t)tb4;
+                  //    key_21j[6] = (uint8_t)tb3;
+                  //    key_21j[7] = (uint8_t)tps1;
+                  //    key_21j[8] = (uint8_t)tps2;
 
-                  aSE = h[MyKey{ti_9, ti_10, ti_11, ti_12, tb5,
-                                tb4, tb3, tps1, tps2}];
+                  aSE = h[kSE];
 
                   df = DIM(tps1) * DIM(tps2);
 
