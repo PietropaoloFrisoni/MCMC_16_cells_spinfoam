@@ -14,7 +14,6 @@
 #include "phmap_dump.h"
 #include "common.h"
 
-
 // this must be included even if we don't hash because we need "struct MyKey"
 // TODO change this
 #include "hash_21j_symbols.h"
@@ -99,7 +98,7 @@ public:
 
   // accepted moves
   int acceptance_ratio;
-
+  int accepted_draws;
   int molteplicity;
 
   Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
@@ -107,6 +106,7 @@ public:
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
         length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), verbosity(verbosity_assigned)
   {
+
     hashed_tables_path_assigned = hashed_tables_path_assigned + "/Hashed_21j_symbols_dspin_" + std::to_string(dspin);
 
     phmap::BinaryInputArchive ar_in(&hashed_tables_path_assigned[0]);
@@ -152,34 +152,40 @@ public:
     }
   }
 
-  // Prints a draw
+  // Prints a generic given draw
   static inline void draw_print(int *draw)
   {
     for (int i = 0; i < BIN_SIZE; i++)
     {
       std::cout << draw[i] << ' ';
     }
-    std::cout << "\t" << draw[16] << std::endl;
+    std::cout << std::endl;
   }
 
-  // Prints the amplitude
+  // Prints a generic given amplitude
   static inline void ampl_print(double *ampl)
   {
     std::cout << *ampl << std::endl;
   }
 
   // Prints all draws and multeplicity
-  static inline void print_draws(uint8_t **matrix, int rows)
+  inline void print_collected_draws()
   {
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < accepted_draws; i++)
     {
       for (int j = 0; j < BIN_SIZE; j++)
       {
-        std::cout << unsigned(matrix[i][j]) << " ";
+        std::cout << unsigned(collected_draws[i][j]) << " ";
       }
 
-      std::cout << "\t" << unsigned(matrix[i][16]) << std::endl;
+      std::cout << "\t" << unsigned(collected_draws[i][BIN_SIZE]) << std::endl;
     }
+  }
+
+  void print_statistics()
+  {
+
+    std::cout << (acceptance_ratio * 100 / length) << "%% of draws have been accepted" << std::endl;
   }
 
   double pce_amplitude_c16()
@@ -256,34 +262,34 @@ public:
 
                   // NW 21j
 
-                  key_21j[0] = (uint8_t)ti_1;
-                  key_21j[1] = (uint8_t)ti_2;
-                  key_21j[2] = (uint8_t)ti_3;
-                  key_21j[3] = (uint8_t)ti_4;
-                  key_21j[4] = (uint8_t)tb1;
-                  key_21j[5] = (uint8_t)tb2;
-                  key_21j[6] = (uint8_t)tb3;
-                  key_21j[7] = (uint8_t)tpn1;
-                  key_21j[8] = (uint8_t)tpn2;
+                  //     key_21j[0] = (uint8_t)ti_1;
+                  //     key_21j[1] = (uint8_t)ti_2;
+                  //     key_21j[2] = (uint8_t)ti_3;
+                  //     key_21j[3] = (uint8_t)ti_4;
+                  //     key_21j[4] = (uint8_t)tb1;
+                  //     key_21j[5] = (uint8_t)tb2;
+                  //    key_21j[6] = (uint8_t)tb3;
+                  //     key_21j[7] = (uint8_t)tpn1;
+                  //     key_21j[8] = (uint8_t)tpn2;
 
-                  aNW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
-                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                  aNW = h[MyKey{ti_1, ti_2, ti_3, ti_4, tb1,
+                                tb2, tb3, tpn1, tpn2}];
 
                   // NE 21j
                   // reflect from left
 
-                  key_21j[0] = (uint8_t)ti_16;
-                  key_21j[1] = (uint8_t)ti_15;
-                  key_21j[2] = (uint8_t)ti_14;
-                  key_21j[3] = (uint8_t)ti_13;
-                  key_21j[4] = (uint8_t)tb5;
-                  key_21j[5] = (uint8_t)tb4;
-                  key_21j[6] = (uint8_t)tb3;
-                  key_21j[7] = (uint8_t)tpn1;
-                  key_21j[8] = (uint8_t)tpn2;
+                  //     key_21j[0] = (uint8_t)ti_16;
+                  //     key_21j[1] = (uint8_t)ti_15;
+                  //     key_21j[2] = (uint8_t)ti_14;
+                  //     key_21j[3] = (uint8_t)ti_13;
+                  //      key_21j[4] = (uint8_t)tb5;
+                  //      key_21j[5] = (uint8_t)tb4;
+                  //      key_21j[6] = (uint8_t)tb3;
+                  //      key_21j[7] = (uint8_t)tpn1;
+                  //      key_21j[8] = (uint8_t)tpn2;
 
-                  aNE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
-                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                  aNE = h[MyKey{ti_16, ti_15, ti_14, ti_13, tb5,
+                                tb4, tb3, tpn1, tpn2}];
 
                   df = DIM(tpn1) * DIM(tpn2);
 
@@ -306,33 +312,33 @@ public:
 
                   // SW 21j
 
-                  key_21j[0] = (uint8_t)ti_8;
-                  key_21j[1] = (uint8_t)ti_7;
-                  key_21j[2] = (uint8_t)ti_6;
-                  key_21j[3] = (uint8_t)ti_5;
-                  key_21j[4] = (uint8_t)tb1;
-                  key_21j[5] = (uint8_t)tb2;
-                  key_21j[6] = (uint8_t)tb3;
-                  key_21j[7] = (uint8_t)tps1;
-                  key_21j[8] = (uint8_t)tps2;
+                  //      key_21j[0] = (uint8_t)ti_8;
+                  //     key_21j[1] = (uint8_t)ti_7;
+                  //    key_21j[2] = (uint8_t)ti_6;
+                  //       key_21j[3] = (uint8_t)ti_5;
+                  //       key_21j[4] = (uint8_t)tb1;
+                  //      key_21j[5] = (uint8_t)tb2;
+                  //      key_21j[6] = (uint8_t)tb3;
+                  //       key_21j[7] = (uint8_t)tps1;
+                  //       key_21j[8] = (uint8_t)tps2;
 
-                  aSW = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
-                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                  aSW = h[MyKey{ti_8, ti_7, ti_6, ti_5, tb1,
+                                tb2, tb3, tps1, tps2}];
 
                   // SE 21j
 
-                  key_21j[0] = (uint8_t)ti_9;
-                  key_21j[1] = (uint8_t)ti_10;
-                  key_21j[2] = (uint8_t)ti_11;
-                  key_21j[3] = (uint8_t)ti_12;
-                  key_21j[4] = (uint8_t)tb5;
-                  key_21j[5] = (uint8_t)tb4;
-                  key_21j[6] = (uint8_t)tb3;
-                  key_21j[7] = (uint8_t)tps1;
-                  key_21j[8] = (uint8_t)tps2;
+                  //  key_21j[0] = (uint8_t)ti_9;
+                  //  key_21j[1] = (uint8_t)ti_10;
+                  //  key_21j[2] = (uint8_t)ti_11;
+                  //  key_21j[3] = (uint8_t)ti_12;
+                  //  key_21j[4] = (uint8_t)tb5;
+                  //  key_21j[5] = (uint8_t)tb4;
+                  //  key_21j[6] = (uint8_t)tb3;
+                  //   key_21j[7] = (uint8_t)tps1;
+                  //   key_21j[8] = (uint8_t)tps2;
 
-                  aSE = h[MyKey{key_21j[0], key_21j[1], key_21j[2], key_21j[3], key_21j[4],
-                                key_21j[5], key_21j[6], key_21j[7], key_21j[8]}];
+                  aSE = h[MyKey{ti_9, ti_10, ti_11, ti_12, tb5,
+                                tb4, tb3, tps1, tps2}];
 
                   df = DIM(tps1) * DIM(tps2);
 

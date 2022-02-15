@@ -52,7 +52,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
     double amp = chain.pce_amplitude_c16();
 
-    chain.draw[16] = 1;
+    // chain.draw[16] = 1;
 
     if (chain.verbosity > 1)
     {
@@ -66,13 +66,12 @@ void Metropolis_Hastings_run(Chain &chain)
         chain.ampl_print(&amp);
     }
 
+    chain.accepted_draws = 0;
     chain.molteplicity = 1;
     chain.acceptance_ratio = 0;
 
     double prop_amp = 0;
-
     double p = 0;
-
     double z = 0;
 
     // start moving
@@ -93,7 +92,6 @@ void Metropolis_Hastings_run(Chain &chain)
             {
                 // sample from a GAUSSIAN with mu = 0 and sigma = D
                 draw_double_sample = gsl_ran_gaussian_ziggurat(ran, chain.sigma);
-
                 chain.gaussian_draw[i] = 2 * (int)round(draw_double_sample);
                 chain.prop_draw[i] = chain.draw[i] + chain.gaussian_draw[i];
 
@@ -145,10 +143,61 @@ void Metropolis_Hastings_run(Chain &chain)
                     std::cout << "prop draw accepted as prop amp is " << prop_amp << " and current amp is " << amp << std::endl;
                 }
 
-                // CONTINUA DA QUI
+                if (step > chain.burnin)
+                {
+
+                    for (int i = 0; i < chain.BIN_SIZE; i++)
+                    {
+                        chain.collected_draws[chain.accepted_draws][i] = chain.draw[i];
+                    }
+
+                    chain.collected_draws[chain.accepted_draws][chain.BIN_SIZE] = chain.molteplicity;
+
+                    chain.collected_amplitudes[chain.accepted_draws] = amp;
+
+                    chain.accepted_draws += 1;
+
+                    if (chain.verbosity > 1)
+                    {
+                        std::cout << "The old draw:" << std::endl;
+                        chain.draw_print(chain.draw);
+                        std::cout << "has been stored with molteplicity " << chain.molteplicity << std::endl;
+                        std::cout << "The corresponding amplitude " << amp << " has been stored as well" << std::endl;
+                        std::cout << "There are " << chain.accepted_draws << " draws stored so far" << std::endl;
+                    }
+                }
+
+                chain.molteplicity = 1;
+
+                for (int i = 0; i < chain.BIN_SIZE; i++)
+                {
+                    chain.draw[i] = chain.prop_draw[i];
+                }
+
+                amp = prop_amp;
+                chain.acceptance_ratio += 1;
+
+                if (chain.verbosity > 1)
+                {
+                    std::cout << "Now the new draw is:" << std::endl;
+                    chain.draw_print(chain.draw);
+                    std::cout << "the new amp is:" << amp << std::endl;
+                }
             }
             else // reject
             {
+
+                chain.molteplicity += 1;
+
+                if (chain.verbosity > 1)
+                {
+                    std::cout << "Prop_draw:" << std::endl;
+                    chain.draw_print(chain.prop_draw);
+                    std::cout << "was rejected, since p " << p << " and z " << z << std::endl;
+                    std::cout << "The current draw:" << std::endl;
+                    chain.draw_print(chain.draw);
+                    std::cout << "remains the same and its molteplicity is " << chain.molteplicity << "\namp remains " << amp << std::endl;
+                }
             }
         }
 
@@ -162,9 +211,13 @@ void Metropolis_Hastings_run(Chain &chain)
 
             chain.acceptance_ratio += 1;
             chain.molteplicity += 1;
-            chain.draw[16] += 1;
 
             continue;
         }
+
+        // TODO final storage
     }
+
+    // chain.print_collected_draws();
+    chain.print_statistics();
 }

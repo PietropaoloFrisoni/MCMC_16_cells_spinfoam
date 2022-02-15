@@ -25,8 +25,8 @@ ifeq ($(DEBUG), 1)
 CXXFLAGS =  -std=c++11 -fopenmp -Wall -g -Og -fPIC  \
             -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(PARALLELHASHMAPDIR) -DDEBUG_ON=1 # debug
 else
-CXXFLAGS =  -std=c++11 -fopenmp -Wall -fPIC \
-            -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(WIGDIR)/inc -I$(PARALLELHASHMAPDIR) -DDEBUG_OFF=1 # optimized
+CXXFLAGS =  -std=c++11 -fopenmp -O3 -fPIC -march=native -fno-math-errno  \
+            -I$(WIGDIR)/inc -I$(FASTWIGDIR)/inc -Isrc -I$(INCDIR)/ -I$(PARALLELHASHMAPDIR) -DDEBUG_OFF=1 # optimized
 endif
 
 LDFLAGS = $(CXXFLAGS) -L$(WIGDIR)/lib/ -L$(FASTWIGDIR)/lib/ -Wl,--no-as-needed -Wl,--allow-shlib-undefined
@@ -52,11 +52,15 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCS)
 	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c -o $@ $< 
 
+
 # shared library
 $(LIBDIR)/libshared.so: $(OBJS)
 	@echo "   CXX    $@"
 	mkdir -p $(dir $@)
 	$(CXX) -shared $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) 
+
+
+	
 	
 # compile test programs
 $(BINDIR)/%: $(TESTDIR)/%.cpp $(OBJS)
