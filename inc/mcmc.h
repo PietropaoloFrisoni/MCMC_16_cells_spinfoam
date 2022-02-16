@@ -15,8 +15,6 @@
 #include "phmap_dump.h"
 #include "common.h"
 
-// this must be included even if we don't hash because we need "struct MyKey"
-// TODO change this
 #include "hash_21j_symbols.h"
 
 class Chain
@@ -176,10 +174,10 @@ public:
     {
       for (int j = 0; j < BIN_SIZE; j++)
       {
-        std::cout << unsigned(collected_draws[i][j]) << " ";
+        std::cout << collected_draws[i][j] << " ";
       }
 
-      std::cout << "\t" << unsigned(collected_draws[i][BIN_SIZE]) << std::endl;
+      std::cout << "\t" << collected_draws[i][BIN_SIZE] << std::endl;
     }
   }
 
@@ -192,11 +190,13 @@ public:
   void store_draws()
   {
 
-    store_path = store_path + "/dspin_" + std::to_string(dspin) + "/N_" + std::to_string(length) + "__s_" + std::to_string(sigma) + "__b_" + std::to_string(burnin) + ".csv";
+    store_path = store_path + "/dspin_" + std::to_string((double)((dspin) / 2));
 
     namespace fs = std::filesystem;
 
     fs::create_directories(store_path);
+
+    store_path = store_path + "/N_" + std::to_string(length) + "__s_" + std::to_string(sigma) + "__b_" + std::to_string(burnin) + ".csv";
 
     std::ofstream out(store_path);
 
@@ -209,11 +209,12 @@ public:
 
     for (int i = 0; i < accepted_draws; i++)
     {
-      for (int j = 0; j <= BIN_SIZE; j++)
+      for (int j = 0; j < BIN_SIZE; j++)
       {
-        out << collected_draws[i][j] << ',';
+        out << collected_draws[i][j] / 2 << ',';
       }
-      out << '\n';
+
+      out << collected_draws[i][BIN_SIZE] << '\n';
     }
   }
 

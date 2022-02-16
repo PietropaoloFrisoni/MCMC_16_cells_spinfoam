@@ -52,8 +52,6 @@ void Metropolis_Hastings_run(Chain &chain)
 
     double amp = chain.pce_amplitude_c16();
 
-    // chain.draw[16] = 1;
-
     if (chain.verbosity > 1)
     {
         std::cout << "Printing Cx coefficients" << std::endl;
@@ -74,6 +72,12 @@ void Metropolis_Hastings_run(Chain &chain)
     double p = 0;
     double z = 0;
 
+    // for measuring timings
+    struct timespec start, stop;
+    double dtime;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     // start moving
 
     for (int step = 0; step < chain.length; step++)
@@ -82,9 +86,6 @@ void Metropolis_Hastings_run(Chain &chain)
         chain.RW_monitor = true;
 
         double draw_double_sample;
-
-        double Cx = 1.0;
-        double Cx_prop = 1.0;
 
         for (int i = 0; i < chain.BIN_SIZE; i++)
         {
@@ -101,9 +102,6 @@ void Metropolis_Hastings_run(Chain &chain)
             {
                 chain.RW_monitor = false;
             }
-
-            Cx *= chain.Ct[1][chain.draw[i]];
-            Cx_prop *= chain.Ct[1][chain.prop_draw[i]];
         }
 
         if (chain.verbosity > 1)
@@ -126,7 +124,21 @@ void Metropolis_Hastings_run(Chain &chain)
         {
             prop_amp = chain.pce_amplitude_c16();
 
-            p = fmin(1.0, (pow(prop_amp, 2) / pow(amp, 2)) * (Cx / Cx_prop));
+            size_t x_ind, xn_ind;
+            double Cx, Cx_new;
+            Cx = Cx_new = 1.0;
+
+            for (int i = 0; i < chain.BIN_SIZE; i++)
+            {
+
+                x_ind = (chain.draw[i]) / 2;
+                xn_ind = (chain.prop_draw[i]) / 2;
+
+                Cx *= chain.Ct[i][x_ind];
+                Cx_new *= chain.Ct[i][xn_ind];
+            }
+
+            p = fmin(1.0, (pow(prop_amp, 2) / pow(amp, 2)) * (Cx / Cx_new));
 
             if (isnan(p))
             {
@@ -141,6 +153,7 @@ void Metropolis_Hastings_run(Chain &chain)
                 if (chain.verbosity > 1)
                 {
                     std::cout << "prop draw accepted as prop amp is " << prop_amp << " and current amp is " << amp << std::endl;
+                    std::cout << "z is " << z << " and p is " << p << std::endl;
                 }
 
                 if (step > chain.burnin)
@@ -218,9 +231,13 @@ void Metropolis_Hastings_run(Chain &chain)
         // TODO: add final storage?
     }
 
+    clock_gettime(CLOCK_MONOTONIC, &stop);
+    dtime = (double)(stop.tv_sec - start.tv_sec);
+    dtime += (double)(stop.tv_nsec - start.tv_nsec) / 1000000000.0;
+    printf("done. Time elapsed: %f seconds.\n", dtime);
+
     // chain.print_collected_draws();
     chain.print_statistics();
 
     chain.store_draws();
-    
 }

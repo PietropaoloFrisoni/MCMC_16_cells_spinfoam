@@ -59,8 +59,6 @@ $(LIBDIR)/libshared.so: $(OBJS)
 	mkdir -p $(dir $@)
 	$(CXX) -shared $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) 
 
-
-	
 	
 # compile test programs
 $(BINDIR)/%: $(TESTDIR)/%.cpp $(OBJS)
