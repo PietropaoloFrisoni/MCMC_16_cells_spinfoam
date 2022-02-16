@@ -24,24 +24,6 @@ void Metropolis_Hastings_run(Chain &chain)
         chain.draw[i] = 2 * ((int)round(r0));
     }
 
-    // precompute the coefficients for truncated proposals
-    // TODO move this inside class constructor
-    chain.Ct = (double **)malloc(chain.BIN_SIZE * sizeof(double *));
-    for (int i = 0; i < chain.BIN_SIZE; i++)
-    {
-        double *Cti = (double *)malloc(chain.dim_intertw_space * sizeof(double));
-        chain.Ct[i] = Cti;
-
-        double Cxk;
-        int k;
-        for (int tk = 0; tk <= chain.ti_max; tk += 2)
-        {
-            k = tk * 0.5;
-            Cxk = cdf_gaussian_discrete(0 - k, chain.i_max - k, chain.sigma);
-            Cti[(tk - 0) / 2] = Cxk;
-        }
-    }
-
     // to this since the amplitude is computed by default with prop_draw
     // TODO: change
     for (int i = 0; i < chain.BIN_SIZE; i++)

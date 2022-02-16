@@ -20,6 +20,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "visualizerFile": "${workspaceFolder}/phmap.natvis",
             "setupCommands": [
                 {
                     "description": "Abilita la riformattazione per gdb",
@@ -39,10 +40,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test_sampler",
             "args": [
-                "--std",
-                "c++17",
                 
             ],
+            "visualizerFile": "${workspaceFolder}/phmap.natvis",
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

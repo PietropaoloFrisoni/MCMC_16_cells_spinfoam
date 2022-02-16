@@ -17,6 +17,29 @@
 
 #include "hash_21j_symbols.h"
 
+// the PDF of a gaussian rounded to the integers
+static inline double pdf_gaussian_discrete(int n, double s)
+{
+
+  return gsl_cdf_gaussian_P((double)n + 0.5, s) -
+         gsl_cdf_gaussian_P((double)n - 0.5, s);
+}
+
+// the CDF of a gaussian rounded to the integers
+static inline double cdf_gaussian_discrete(int n1, int n2, double s)
+{
+
+  double r = 0.0;
+  int x = n1;
+  while (x <= n2)
+  {
+    r += pdf_gaussian_discrete(x, s);
+    x++;
+  }
+
+  return r;
+}
+
 class Chain
 {
 
@@ -135,6 +158,22 @@ public:
 
     tps1_min = 0;
     tps1_max = 2 * dspin;
+
+    Ct = (double **)malloc(BIN_SIZE * sizeof(double *));
+    for (int i = 0; i < BIN_SIZE; i++)
+    {
+      double *Cti = (double *)malloc(dim_intertw_space * sizeof(double));
+      Ct[i] = Cti;
+
+      double Cxk;
+      int k;
+      for (int tk = 0; tk <= ti_max; tk += 2)
+      {
+        k = tk * 0.5;
+        Cxk = cdf_gaussian_discrete(0 - k, i_max - k, sigma);
+        Cti[(tk - 0) / 2] = Cxk;
+      }
+    }
   };
 
   // Prints truncated coefficients
@@ -190,7 +229,7 @@ public:
   void store_draws()
   {
 
-    store_path = store_path + "/dspin_" + std::to_string((double)((dspin) / 2));
+    store_path = store_path + "/dspin_" + std::to_string((double)((double)(dspin) / 2.00000));
 
     namespace fs = std::filesystem;
 
@@ -205,7 +244,7 @@ public:
       out << "intertwiner " << std::to_string(i + 1) << ',';
     }
 
-    out << "draw molteplicity " << '\n';
+    out << "draw molteplicity " << ',' << "draw amplitude" << '\n';
 
     for (int i = 0; i < accepted_draws; i++)
     {
@@ -214,7 +253,7 @@ public:
         out << collected_draws[i][j] / 2 << ',';
       }
 
-      out << collected_draws[i][BIN_SIZE] << '\n';
+      out << collected_draws[i][BIN_SIZE] << ',' << collected_amplitudes[i] << '\n';
     }
   }
 
@@ -456,28 +495,5 @@ public:
     std::cout << "chain with dspin " << dspin << " destroyed" << std::endl;
   };
 };
-
-// the PDF of a gaussian rounded to the integers
-static inline double pdf_gaussian_discrete(int n, double s)
-{
-
-  return gsl_cdf_gaussian_P((double)n + 0.5, s) -
-         gsl_cdf_gaussian_P((double)n - 0.5, s);
-}
-
-// the CDF of a gaussian rounded to the integers
-static inline double cdf_gaussian_discrete(int n1, int n2, double s)
-{
-
-  double r = 0.0;
-  int x = n1;
-  while (x <= n2)
-  {
-    r += pdf_gaussian_discrete(x, s);
-    x++;
-  }
-
-  return r;
-}
 
 void Metropolis_Hastings_run(Chain &chain);
