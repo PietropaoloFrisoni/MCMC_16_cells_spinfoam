@@ -1,7 +1,5 @@
 #include "mcmc.h"
 
-#include "tqdm.h"
-
 void Metropolis_Hastings_run(Chain &chain)
 {
 
