@@ -15,8 +15,8 @@
 #include "phmap.h"
 #include "phmap_dump.h"
 #include "common.h"
-
 #include "hash_21j_symbols.h"
+#include "progressbar.h"
 
 // the PDF of a gaussian rounded to the integers
 static inline double pdf_gaussian_discrete(int n, double s)
@@ -220,7 +220,7 @@ public:
   void print_statistics()
   {
 
-    std::cout << (acceptance_ratio * 100 / length) << "%% of draws have been accepted" << std::endl;
+    std::cout << (acceptance_ratio * 100 / length) << "% of draws have been accepted" << std::endl;
   }
 
   void store_draws()
@@ -230,22 +230,22 @@ public:
 
     sprintf(tmp, "/j_%.8g", ((double)(dspin) / 2.0));
 
-    store_path = store_path + std::string(tmp);
+    store_path += std::string(tmp);
 
     std::filesystem::create_directories(store_path);
 
     sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d.csv", length, sigma, burnin);
 
-    store_path = store_path + std::string(tmp);
+    store_path += std::string(tmp);
 
     std::ofstream out(store_path);
 
     for (int i = 0; i < BIN_SIZE; i++)
     {
-      out << "intertwiner " << std::to_string(i + 1) << ',';
+      out << "intertwiner " << std::to_string(i+1) << ',';
     }
 
-    out << "draw molteplicity " << ',' << "draw amplitude" << '\n';
+    out << "draw molteplicity" << ',' << "draw amplitude" << '\n';
 
     for (int i = 0; i < accepted_draws; i++)
     {
@@ -493,7 +493,6 @@ public:
     }
     delete[] Ct;
 
-    std::cout << "chain with dspin " << dspin << " destroyed" << std::endl;
   };
 };
 

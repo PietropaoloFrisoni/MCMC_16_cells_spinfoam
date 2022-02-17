@@ -5,11 +5,9 @@ export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 # this is read as string by main, therefore " " is not necessary
 DATADIR=./data_folder/fastwig_tables/ 
 
-ARGS=./data_folder
-
 echo Running all tests... 
 
- # bin/test_jsymbols $DATADIR
+# bin/test_jsymbols $DATADIR
 
 # bin/Hashing_21j  $DATADIR
 

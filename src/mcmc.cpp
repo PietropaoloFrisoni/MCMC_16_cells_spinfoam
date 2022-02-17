@@ -1,5 +1,7 @@
 #include "mcmc.h"
 
+#include "tqdm.h"
+
 void Metropolis_Hastings_run(Chain &chain)
 {
 
@@ -58,10 +60,15 @@ void Metropolis_Hastings_run(Chain &chain)
 
     clock_gettime(CLOCK_MONOTONIC, &start);
 
+    progressbar bar(chain.length);
+    bar.set_done_char("#");
+
     // start moving
 
     for (int step = 0; step < chain.length; step++)
     {
+
+        bar.update();
 
         chain.RW_monitor = true;
 
@@ -214,7 +221,7 @@ void Metropolis_Hastings_run(Chain &chain)
     clock_gettime(CLOCK_MONOTONIC, &stop);
     dtime = (double)(stop.tv_sec - start.tv_sec);
     dtime += (double)(stop.tv_nsec - start.tv_nsec) / 1000000000.0;
-    printf("done. Time elapsed: %f seconds.\n", dtime);
+    printf("\n\nChain completed.\nTime elapsed: %f seconds.\n", dtime);
 
     // chain.print_collected_draws();
     chain.print_statistics();

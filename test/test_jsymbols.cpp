@@ -5,7 +5,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-std::cout << "\n\nTESTING FASTWIG TABLES...\n\n" << std::endl;
+std::cout << "\n\nTesting fastwig tables...\n\n" << std::endl;
 
 std::string fastwig_tables_folder = argv[1];
  

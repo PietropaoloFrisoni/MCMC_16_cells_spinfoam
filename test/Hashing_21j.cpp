@@ -3,8 +3,7 @@
 int main(int argc, char *argv[])
 {
 
-   std::cout << "\n\nTESTING NON-THREADED SAMPLER...\n\n"
-             << std::endl;
+   std::cout << "\n\nTesting hashing of 21j symbols...\n\n" << std::endl;
 
    // in general I want these two strings to be different!
    std::string fastwig_tables_folder = argv[1];

@@ -1,5 +1,3 @@
-# My parameters
-
 # external folder
 ext
 
@@ -12,13 +10,13 @@ prove
 # folder with data
 data_folder
 
-# folder with data
+# private folder
 private_folder
 
-#visual studio folder
+# visual studio conf folder
 .vscode
 
-
+# file for hash parallel map debugger
 phmap.natvis
 
 
