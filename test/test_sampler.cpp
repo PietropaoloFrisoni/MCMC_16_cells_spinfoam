@@ -13,7 +13,8 @@ int main(int argc, char **argv)
     double sigma_assigned = 0.40;
     double burnin_assigned = 100;
     int verbosity = 0;
-
+  
+   
     Chain test_chain(store_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned, sigma_assigned, burnin_assigned, verbosity);
 
     Metropolis_Hastings_run(test_chain);

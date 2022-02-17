@@ -4,11 +4,9 @@ void Metropolis_Hastings_run(Chain &chain)
 {
 
     // intialize global seed for random()
-    // TODO move this inside class constructor
     srandom(time(NULL));
 
     // initializes the PRNG
-    // TODO move this inside class constructor
     gsl_rng *ran;
     ran = gsl_rng_alloc(gsl_rng_taus2);
     gsl_rng_set(ran, (uint64_t)(random()));
