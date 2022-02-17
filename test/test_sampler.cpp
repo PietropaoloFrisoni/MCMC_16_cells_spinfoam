@@ -1,7 +1,5 @@
 #include "mcmc.h"
 
-#include <getopt.h>
-
 int main(int argc, char **argv)
 
 {
@@ -10,11 +8,11 @@ int main(int argc, char **argv)
 
     std::string store_path_assigned = "./data_folder/collected_draws";
     std::string hashed_tables_path_assigned = "./data_folder/hashed_21j";
-    int dspin_assigned = 1;
-    int length_assigned = 10;
+    int dspin_assigned = 2;
+    int length_assigned = 10000;
     double sigma_assigned = 0.40;
-    double burnin_assigned = 2;
-    int verbosity = 2;
+    double burnin_assigned = 100;
+    int verbosity = 0;
 
     Chain test_chain(store_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned, sigma_assigned, burnin_assigned, verbosity);
 

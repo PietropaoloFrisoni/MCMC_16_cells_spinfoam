@@ -6,6 +6,7 @@
 #include <typeinfo>
 #include <math.h>
 #include <filesystem>
+#include <getopt.h>
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
@@ -70,10 +71,6 @@ private:
 
   // path in which hashed tables of 21j symbols are stored
   std::string hashed_tables_path;
-
-  // keys used to recover 21js from hash tables
-  // TODO this will be multi-thread
-  uint8_t key_21j[9];
 
   // amplitude with compensated summation
   double ampl, c, y, t;
@@ -141,7 +138,6 @@ public:
     collected_draws = new int *[length];
 
     // This allocates several little chunks of memory instead of one single block
-    // We pre-allocated more than the required memory, so we don't need to re-allocate
     for (int i = 0; i < length; i++)
     {
       // 16 indices + integer multiplicity of the draw
@@ -159,6 +155,7 @@ public:
     tps1_min = 0;
     tps1_max = 2 * dspin;
 
+    // Coefficients for truncated gaussian proposal
     Ct = (double **)malloc(BIN_SIZE * sizeof(double *));
     for (int i = 0; i < BIN_SIZE; i++)
     {
@@ -229,13 +226,17 @@ public:
   void store_draws()
   {
 
-    store_path = store_path + "/dspin_" + std::to_string((double)((double)(dspin) / 2.00000));
+    char tmp[1024];
 
-    namespace fs = std::filesystem;
+    sprintf(tmp, "/j_%.8g", ((double)(dspin) / 2.0));
 
-    fs::create_directories(store_path);
+    store_path = store_path + std::string(tmp);
 
-    store_path = store_path + "/N_" + std::to_string(length) + "__s_" + std::to_string(sigma) + "__b_" + std::to_string(burnin) + ".csv";
+    std::filesystem::create_directories(store_path);
+
+    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d.csv", length, sigma, burnin);
+
+    store_path = store_path + std::string(tmp);
 
     std::ofstream out(store_path);
 

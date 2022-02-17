@@ -37,9 +37,9 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
 
-_OBJS =  mcmc.o  hash_21j_symbols.o
+_OBJS =  mcmc.o  hash_21j_symbols.o python_mirror.o
 
-_TESTS = test_jsymbols test_sampler Hashing_21j
+_TESTS = test_jsymbols test_sampler Hashing_21j 
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
 TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))
@@ -54,7 +54,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCS)
 
 
 # shared library
-$(LIBDIR)/libshared.so: $(OBJS)
+$(LIBDIR)/libspinfoam.so: $(OBJS)
 	@echo "   CXX    $@"
 	mkdir -p $(dir $@)
 	$(CXX) -shared $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) 
@@ -64,7 +64,7 @@ $(LIBDIR)/libshared.so: $(OBJS)
 $(BINDIR)/%: $(TESTDIR)/%.cpp $(OBJS)
 	@echo "   CXX    $@"
 	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -o $@ -Iinc/ $< -Llib/ $(LDFLAGS) -lshared $(LDLIBS)	
+	$(CXX) $(CXXFLAGS) -o $@ -Iinc/ $< -Llib/ $(LDFLAGS) -lspinfoam $(LDLIBS)	
 
 ###############################################################################################
 
@@ -74,7 +74,7 @@ default: all
 
 all: lib tests 
 
-lib: $(LIBDIR)/libshared.so
+lib: $(LIBDIR)/libspinfoam.so
 
 tests: lib $(TESTS)
 
