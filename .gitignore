@@ -12,6 +12,14 @@ prove
 # folder with data
 data_folder
 
+# folder with data
+private_folder
+
+#visual studio folder
+.vscode
+
+
+phmap.natvis
 
 
 
