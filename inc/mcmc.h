@@ -114,6 +114,7 @@ public:
   double const sigma;
   int const burnin;
   int const verbosity;
+  int const thread_id;
 
   // accepted moves
   int acceptance_ratio;
@@ -121,12 +122,18 @@ public:
   int molteplicity;
 
   Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
-        const int length_assigned, const double sigma_assigned, const int burnin_assigned, const int verbosity_assigned)
+        const int length_assigned, const double sigma_assigned, const int burnin_assigned, 
+        const int verbosity_assigned, const int thread_id_assigned)
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
-        length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), verbosity(verbosity_assigned)
+        length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), 
+        verbosity(verbosity_assigned), thread_id(thread_id_assigned)
   {
 
-    hashed_tables_path_assigned = hashed_tables_path_assigned + "/Hashed_21j_symbols_dspin_" + std::to_string(dspin);
+    char tmp[1024];
+
+    sprintf(tmp, "j_%.8g", ((double)(dspin) / 2.0));
+
+    hashed_tables_path_assigned = hashed_tables_path_assigned + "/hashed_21j_symbols_" + std::string(tmp);
 
     phmap::BinaryInputArchive ar_in(&hashed_tables_path_assigned[0]);
     h.phmap_load(ar_in);
@@ -234,7 +241,7 @@ public:
 
     std::filesystem::create_directories(store_path);
 
-    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d.csv", length, sigma, burnin);
+    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d_thread_%.d.csv", length, sigma, burnin, thread_id);
 
     store_path += std::string(tmp);
 
@@ -242,10 +249,10 @@ public:
 
     for (int i = 0; i < BIN_SIZE; i++)
     {
-      out << "intertwiner " << std::to_string(i+1) << ',';
+      out << "intertwiner " << std::to_string(i + 1) << ',';
     }
 
-    out << "draw molteplicity" << ',' << "draw amplitude" << '\n';
+    out << "draw multeplicity" << ',' << "draw amplitude" << '\n';
 
     for (int i = 0; i < accepted_draws; i++)
     {
@@ -264,7 +271,6 @@ public:
     // spins are to be read counterclockwise
     // starting from top
 
-    // TODO: not completely efficient
     ti_1 = prop_draw[0];
     ti_2 = prop_draw[1];
     ti_3 = prop_draw[2];
@@ -492,7 +498,6 @@ public:
       delete[] Ct[i];
     }
     delete[] Ct;
-
   };
 };
 

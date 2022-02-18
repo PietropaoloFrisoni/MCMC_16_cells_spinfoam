@@ -32,7 +32,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
     double amp = chain.pce_amplitude_c16();
 
-    if (chain.verbosity > 1)
+    if (chain.verbosity >= 2)
     {
         std::cout << "Printing Cx coefficients" << std::endl;
         chain.trunc_coeff_print(chain.Ct, chain.dspin);
@@ -59,14 +59,17 @@ void Metropolis_Hastings_run(Chain &chain)
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     progressbar bar(chain.length);
-    bar.set_done_char("#");
+    bar.set_done_char("█");
 
     // start moving
 
     for (int step = 0; step < chain.length; step++)
     {
 
-        bar.update();
+        if (chain.verbosity >= 1)
+        {
+            bar.update();
+        }
 
         chain.RW_monitor = true;
 
@@ -89,7 +92,7 @@ void Metropolis_Hastings_run(Chain &chain)
             }
         }
 
-        if (chain.verbosity > 1)
+        if (chain.verbosity >= 2)
         {
             std::cout << "----------------------------------------" << std::endl;
 
@@ -135,7 +138,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
             if (z < p) // accept
             {
-                if (chain.verbosity > 1)
+                if (chain.verbosity >= 2)
                 {
                     std::cout << "prop draw accepted as prop amp is " << prop_amp << " and current amp is " << amp << std::endl;
                     std::cout << "z is " << z << " and p is " << p << std::endl;
@@ -155,7 +158,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
                     chain.accepted_draws += 1;
 
-                    if (chain.verbosity > 1)
+                    if (chain.verbosity >= 2)
                     {
                         std::cout << "The old draw:" << std::endl;
                         chain.draw_print(chain.draw);
@@ -175,7 +178,7 @@ void Metropolis_Hastings_run(Chain &chain)
                 amp = prop_amp;
                 chain.acceptance_ratio += 1;
 
-                if (chain.verbosity > 1)
+                if (chain.verbosity >= 2)
                 {
                     std::cout << "Now the new draw is:" << std::endl;
                     chain.draw_print(chain.draw);
@@ -187,7 +190,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
                 chain.molteplicity += 1;
 
-                if (chain.verbosity > 1)
+                if (chain.verbosity >= 2)
                 {
                     std::cout << "Prop_draw:" << std::endl;
                     chain.draw_print(chain.prop_draw);
@@ -201,7 +204,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
         else
         {
-            if (chain.verbosity > 1)
+            if (chain.verbosity >= 2)
             {
                 std::cout << "\nThe prop_draw is equal to the current draw, so the molteplicity of the current draw is raised to "
                           << chain.molteplicity + 1 << std::endl;
@@ -219,10 +222,12 @@ void Metropolis_Hastings_run(Chain &chain)
     clock_gettime(CLOCK_MONOTONIC, &stop);
     dtime = (double)(stop.tv_sec - start.tv_sec);
     dtime += (double)(stop.tv_nsec - start.tv_nsec) / 1000000000.0;
-    printf("\n\nChain completed.\nTime elapsed: %f seconds.\n", dtime);
 
-    // chain.print_collected_draws();
-    chain.print_statistics();
+    if (chain.verbosity >= 1)
+    {
+        printf("\n\nChain completed.\nTime elapsed: %f seconds.\n", dtime);
+        chain.print_statistics();
+    }
 
     chain.store_draws();
 }

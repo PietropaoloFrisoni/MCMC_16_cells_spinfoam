@@ -11,4 +11,4 @@ echo Running all tests...
 
 # bin/Hashing_21j  $DATADIR
 
- bin/test_sampler   
+  bin/test_sampler   

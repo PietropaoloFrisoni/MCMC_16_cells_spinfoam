@@ -178,8 +178,14 @@ void release()
   free(FASTWIG_9J_TABLE_PATH);
 }
 
-void Hash_21j_symbols(const int tj)
+void Hash_21j_symbols(std::string hash_tables_store_path, const int tj)
 {
+
+     char tmp[1024];
+
+    sprintf(tmp, "/hashed_21j_symbols_j_%.8g", ((double)(tj) / 2.0));
+
+    hash_tables_store_path += std::string(tmp);
 
   // char* store_path_assigned = &store_path_assigned_string[0];
 
@@ -333,8 +339,6 @@ void Hash_21j_symbols(const int tj)
 
                     // symbol computed, global phase absorbed in the partials
 
-                    // h[MyKey{5, 5, 5}] = 11.33;
-
                     h[MyKey{ti1, ti2, ti3, ti4, tb1, tb2, tb3, tp1, tp2}] = sym;
 
                     done++;
@@ -358,7 +362,7 @@ void Hash_21j_symbols(const int tj)
 
   // dump hashtable to disk
 
-  phmap::BinaryOutputArchive ar_out("/home/frisus95/Scrivania/Final_project/data_folder/Hashed_21j_symbols_dspin_2");
+  phmap::BinaryOutputArchive ar_out(&hash_tables_store_path[0]);
   h.phmap_dump(ar_out);
 
   wig_temp_free();
