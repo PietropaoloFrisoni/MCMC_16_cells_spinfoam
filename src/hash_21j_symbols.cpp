@@ -144,8 +144,6 @@ void init(std::string root_folder_string, int verbosity)
 
   char *root_folder = &root_folder_string[0];
 
-  std::cout << root_folder << std::endl;
-
   // check root folder is accessible
   DIR *d = opendir(root_folder);
   if (d == NULL)
@@ -181,11 +179,11 @@ void release()
 void Hash_21j_symbols(std::string hash_tables_store_path, const int tj)
 {
 
-     char tmp[1024];
+  char tmp[1024];
 
-    sprintf(tmp, "/hashed_21j_symbols_j_%.8g", ((double)(tj) / 2.0));
+  sprintf(tmp, "/hashed_21j_symbols_j_%.8g", ((double)(tj) / 2.0));
 
-    hash_tables_store_path += std::string(tmp);
+  hash_tables_store_path += std::string(tmp);
 
   // char* store_path_assigned = &store_path_assigned_string[0];
 

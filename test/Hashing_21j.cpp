@@ -1,16 +1,21 @@
 #include "hash_21j_symbols.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 
-   std::cout << "\n\nTesting hashing of 21j symbols...\n\n" << std::endl;
+   if (argc < 4)
+   {
+      fprintf(stderr, "Usage: %s [DSPIN] [HASH_TABLES_STORE_PATH] [FASTWIG_TABLES_PATH] [VERBOSITY]\n", argv[0]);
+      exit(EXIT_FAILURE);
+   }
 
-   // in general I want these two strings to be different!
-   std::string fastwig_tables_folder = argv[1];
-   std::string store_path_assigned = argv[1];
-   std::string hashed_tables_path_assigned = "./data_folder/hashed_21j";
-   int dspin_assigned = 2;
-   int verbosity = 2;
+   std::cout << "\n\nHashing of 21j symbols...\n\n"
+             << std::endl;
+
+   int dspin_assigned = std::stoi(argv[1]);
+   std::string hashed_tables_path_assigned = argv[2];
+   std::string fastwig_tables_folder = argv[3];
+   int verbosity = std::stoi(argv[4]);
 
    init(fastwig_tables_folder, verbosity);
 

@@ -2,13 +2,18 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-# this is read as string by main, therefore " " is not necessary
-DATADIR=./data_folder/fastwig_tables/ 
+FASTWIG_TABLES_PATH=./data_folder/fastwig_tables/
+
+HASH_TABLES_STORE_PATH=./data_folder/hashed_21j/
+
+DSPIN=3
+
+VERBOSITY=0
 
 echo Running all tests... 
 
 # bin/test_jsymbols $DATADIR
 
-# bin/Hashing_21j  $DATADIR
+ bin/Hashing_21j    $DSPIN    $HASH_TABLES_STORE_PATH    $FASTWIG_TABLES_PATH    $VERBOSITY
 
-  bin/test_sampler   
+#  bin/test_sampler   
