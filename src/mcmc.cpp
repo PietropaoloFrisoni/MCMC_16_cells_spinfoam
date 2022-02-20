@@ -63,7 +63,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
     // start moving
 
-    for (int step = 0; step < chain.length; step++)
+    for (int step = 0; step <= chain.length; step++)
     {
 
         if (chain.verbosity >= 1)
@@ -160,7 +160,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
                     if (chain.verbosity >= 2)
                     {
-                        std::cout << "The old draw:" << std::endl;
+                        std::cout << "\nThe old draw:" << std::endl;
                         chain.draw_print(chain.draw);
                         std::cout << "has been stored with molteplicity " << chain.molteplicity << std::endl;
                         std::cout << "The corresponding amplitude " << amp << " has been stored as well" << std::endl;
@@ -216,12 +216,36 @@ void Metropolis_Hastings_run(Chain &chain)
             continue;
         }
 
-        // TODO: add final storage?
+        // final storage
+        if (step == chain.length)
+        {
+
+            for (int i = 0; i < chain.BIN_SIZE; i++)
+            {
+                chain.collected_draws[chain.accepted_draws][i] = chain.draw[i];
+            }
+
+            chain.collected_draws[chain.accepted_draws][chain.BIN_SIZE] = chain.molteplicity;
+
+            chain.collected_amplitudes[chain.accepted_draws] = amp;
+
+            chain.accepted_draws += 1;
+
+            if (chain.verbosity >= 2)
+            {
+                std::cout << "\n\n\nThe final draw:" << std::endl;
+                chain.draw_print(chain.draw);
+                std::cout << "has been stored with molteplicity " << chain.molteplicity << std::endl;
+                std::cout << "The corresponding amplitude " << amp << " has been stored as well" << std::endl;
+                std::cout << "There are " << chain.accepted_draws << " draws stored in total" << std::endl;
+            }
+        }
     }
 
     clock_gettime(CLOCK_MONOTONIC, &stop);
     dtime = (double)(stop.tv_sec - start.tv_sec);
     dtime += (double)(stop.tv_nsec - start.tv_nsec) / 1000000000.0;
+    chain.run_time = dtime; 
 
     if (chain.verbosity >= 1)
     {

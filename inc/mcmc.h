@@ -85,6 +85,9 @@ private:
   double aS, cS, yS, tS;
   double aSW, aSE;
 
+  // used as path shortcut
+  char tmp[1024];
+
 public:
   using Hash = phmap::flat_hash_map<MyKey, double>;
   Hash h{};
@@ -114,22 +117,21 @@ public:
   double const sigma;
   int const burnin;
   int const verbosity;
-  int const thread_id;
+  int const chain_id;
 
   // accepted moves
   int acceptance_ratio;
   int accepted_draws;
   int molteplicity;
+  float run_time;
 
   Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
-        const int length_assigned, const double sigma_assigned, const int burnin_assigned, 
+        const int length_assigned, const double sigma_assigned, const int burnin_assigned,
         const int verbosity_assigned, const int thread_id_assigned)
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
-        length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned), 
-        verbosity(verbosity_assigned), thread_id(thread_id_assigned)
+        length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned),
+        verbosity(verbosity_assigned), chain_id(thread_id_assigned)
   {
-
-    char tmp[1024];
 
     sprintf(tmp, "j_%.8g", ((double)(dspin) / 2.0));
 
@@ -241,7 +243,7 @@ public:
 
     std::filesystem::create_directories(store_path);
 
-    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d_thread_%.d.csv", length, sigma, burnin, thread_id);
+    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d_chain_%.d.csv", length, sigma, burnin, chain_id);
 
     store_path += std::string(tmp);
 
@@ -252,9 +254,18 @@ public:
       out << "intertwiner " << std::to_string(i + 1) << ',';
     }
 
-    out << "draw multeplicity" << ',' << "draw amplitude" << '\n';
+    out << "draw multeplicity" << ',' << "draw amplitude" << ','
+        << "total accept. draws" << ',' << "total accept. rate" << ',' << "total run time" << '\n';
 
-    for (int i = 0; i < accepted_draws; i++)
+    for (int j = 0; j < BIN_SIZE; j++)
+    {
+      out << collected_draws[0][j] / 2 << ',';
+    }
+
+    out << collected_draws[0][BIN_SIZE] << ',' << collected_amplitudes[0] << ','
+        << accepted_draws << ',' << acceptance_ratio << "%," << run_time << " s\n";
+
+    for (int i = 1; i < accepted_draws; i++)
     {
       for (int j = 0; j < BIN_SIZE; j++)
       {
@@ -498,6 +509,8 @@ public:
       delete[] Ct[i];
     }
     delete[] Ct;
+
+    h.clear();
   };
 };
 
