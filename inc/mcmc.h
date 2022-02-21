@@ -90,7 +90,7 @@ private:
 
 public:
   using Hash = phmap::flat_hash_map<MyKey, double>;
-  Hash h{};
+  std::shared_ptr<Hash> h;
 
   // set dimensionality
   static constexpr int BIN_SIZE = 16;
@@ -127,7 +127,7 @@ public:
 
   Chain(std::string store_path_assigned, std::string hashed_tables_path_assigned, const int dspin_assigned,
         const int length_assigned, const double sigma_assigned, const int burnin_assigned,
-        const int verbosity_assigned, const int thread_id_assigned)
+        const int verbosity_assigned, const int thread_id_assigned, const std::shared_ptr<Hash> hash)
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned), dspin(dspin_assigned),
         length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned),
         verbosity(verbosity_assigned), chain_id(thread_id_assigned)
@@ -137,8 +137,13 @@ public:
 
     hashed_tables_path_assigned = hashed_tables_path_assigned + "/hashed_21j_symbols_" + std::string(tmp);
 
+#if 1
+    h = hash;
+#else
+    h = std::make_shared<Hash>();
     phmap::BinaryInputArchive ar_in(&hashed_tables_path_assigned[0]);
-    h.phmap_load(ar_in);
+    h->phmap_load(ar_in);
+#endif
 
     ti_max = 2 * dspin;
     i_max = 0.5 * ti_max;
@@ -368,7 +373,7 @@ public:
                   //     key_21j[7] = (uint8_t)tpn1;
                   //     key_21j[8] = (uint8_t)tpn2;
 
-                  aNW = h[kNW];
+                  aNW = (*h)[kNW];
 
                   // NE 21j
                   // reflect from left
@@ -383,7 +388,7 @@ public:
                   //     key_21j[7] = (uint8_t)tpn1;
                   //     key_21j[8] = (uint8_t)tpn2;
 
-                  aNE = h[kNE];
+                  aNE = (*h)[kNE];
 
                   df = DIM(tpn1) * DIM(tpn2);
 
@@ -426,7 +431,7 @@ public:
                   //    key_21j[7] = (uint8_t)tps1;
                   //    key_21j[8] = (uint8_t)tps2;
 
-                  aSW = h[kSW];
+                  aSW = (*h)[kSW];
 
                   // SE 21j
 
@@ -440,7 +445,7 @@ public:
                   //    key_21j[7] = (uint8_t)tps1;
                   //    key_21j[8] = (uint8_t)tps2;
 
-                  aSE = h[kSE];
+                  aSE = (*h)[kSE];
 
                   df = DIM(tps1) * DIM(tps2);
 
@@ -510,7 +515,6 @@ public:
     }
     delete[] Ct;
 
-    h.clear();
   };
 };
 
