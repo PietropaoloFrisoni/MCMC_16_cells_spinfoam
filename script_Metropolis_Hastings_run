@@ -1,0 +1,30 @@
+#!/bin/bash
+
+export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
+
+#export OMP_NUM_THREADS=6
+
+DSPIN=3
+
+LENGTH=100
+
+SIGMA=0.4
+
+BURNIN=10
+
+VERBOSITY=0
+
+DRAWS_STORE_PATH=./data_folder/collected_draws
+
+HASH_TABLES_STORE_PATH=./data_folder/hashed_21j
+
+FASTWIG_TABLES_PATH=./data_folder/fastwig_tables
+            
+
+echo "Running Metropolis-Hastings algorithm..."
+echo
+
+bin/Metropolis_Hastings_run # $DSPIN $LENGTH $SIGMA $BURNIN $OMP_NUM_THREADS $VERBOSITY $DRAWS_STORE_PATH $HASH_TABLES_STORE_PATH $FASTWIG_TABLES_PATH 
+
+echo
+echo "completed"
