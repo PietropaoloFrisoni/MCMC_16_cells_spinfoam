@@ -36,7 +36,8 @@ struct MyKey
     return phmap::HashState().combine(0, k.key[0], k.key[1], k.key[2], k.key[3], k.key[4], k.key[5], k.key[6], k.key[7], k.key[8]);
   }
 
-#else
+#else 
+  // not working (?)
   friend size_t hash_value(const MyKey &k)
   {
     uint64_t x = *((uint64_t *)k.key.data());

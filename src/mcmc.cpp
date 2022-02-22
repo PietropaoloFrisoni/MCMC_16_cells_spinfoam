@@ -30,7 +30,7 @@ void Metropolis_Hastings_run(Chain &chain)
         chain.prop_draw[i] = chain.draw[i];
     }
 
-    double amp = chain.pce_amplitude_c16();
+    double amp = chain.spinfoam_16_cell_amplitude();
 
     if (chain.verbosity >= 2)
     {
@@ -110,7 +110,7 @@ void Metropolis_Hastings_run(Chain &chain)
 
         if (chain.RW_monitor == false)
         {
-            prop_amp = chain.pce_amplitude_c16();
+            prop_amp = chain.spinfoam_16_cell_amplitude();
 
             size_t x_ind, xn_ind;
             double Cx, Cx_new;
@@ -245,7 +245,7 @@ void Metropolis_Hastings_run(Chain &chain)
     clock_gettime(CLOCK_MONOTONIC, &stop);
     dtime = (double)(stop.tv_sec - start.tv_sec);
     dtime += (double)(stop.tv_nsec - start.tv_nsec) / 1000000000.0;
-    chain.run_time = dtime; 
+    chain.run_time = dtime;
 
     if (chain.verbosity >= 1)
     {
