@@ -39,7 +39,7 @@ INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
 
 _OBJS =  mcmc.o  hash_21j_symbols.o python_mirror.o
 
-_TESTS = test_jsymbols test_sampler Hashing_21j 
+_TESTS = test_jsymbols Metropolis_Hastings_parallel_run Hashing_21j 
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
 TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))

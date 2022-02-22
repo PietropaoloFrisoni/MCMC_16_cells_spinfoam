@@ -13,7 +13,18 @@ def spinfoam_compile_debug():
 
 def spinfoam_clean():
     os.system("make clean")
+    
 
+    
+def Metropolis_Hastings_parallel_run(draws_path, spin, length, sigma, burnin, verbosity, number_of_threads):
+    spinfoam_functions = CDLL("./lib/libspinfoam.so") 
+    print(f'Starting MH run with {number_of_threads} threads...')
+    spinfoam_functions._Z15MH_parallel_runPcS_iidiii(draws_path.encode(),
+                                          b"./data_folder/hashed_21j",
+                                          int(2 * spin), length,
+                                          c_double(sigma), burnin, verbosity, number_of_threads)     
+    print(f'...all threads completed the run')
+    
 
 def Metropolis_Hastings_run(draws_path, spin, length, sigma, burnin, verbosity, thread_id):
     spinfoam_functions = CDLL("./lib/libspinfoam.so")

@@ -2,29 +2,31 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-#export OMP_NUM_THREADS=6
+export OMP_NUM_THREADS=5
 
-DSPIN=3
+FASTWIG_TABLES_PATH=./data_folder/fastwig_tables/
+
+HASH_TABLES_STORE_PATH=./data_folder/hashed_21j/
+
+DRAWS_STORE_PATH=./data_folder/collected_draws
+
+DSPIN=5
 
 LENGTH=100
 
-SIGMA=0.4
+SIGMA=0.38
 
 BURNIN=10
 
 VERBOSITY=0
 
-DRAWS_STORE_PATH=./data_folder/collected_draws
+now=$(date)
+echo
+echo "Starting Metropolis-Hastings algorithm... [ NUM_OF_THREADS = ${OMP_NUM_THREADS} DSPIN = ${DSPIN} LENGTH = ${LENGTH} ]... (now: $now)"
 
-HASH_TABLES_STORE_PATH=./data_folder/hashed_21j
-
-FASTWIG_TABLES_PATH=./data_folder/fastwig_tables
+bin/Metropolis_Hastings_parallel_run  $OMP_NUM_THREADS  $DSPIN  $LENGTH  $SIGMA  $BURNIN  $VERBOSITY  $DRAWS_STORE_PATH  $HASH_TABLES_STORE_PATH
             
-
-echo "Running Metropolis-Hastings algorithm..."
+now=$(date)
 echo
+echo "... completed! (now: $now)"
 
-bin/Metropolis_Hastings_run # $DSPIN $LENGTH $SIGMA $BURNIN $OMP_NUM_THREADS $VERBOSITY $DRAWS_STORE_PATH $HASH_TABLES_STORE_PATH $FASTWIG_TABLES_PATH 
-
-echo
-echo "completed"
