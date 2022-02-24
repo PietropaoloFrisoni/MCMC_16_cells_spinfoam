@@ -10,6 +10,7 @@ INCDIR = inc
 LIBDIR = lib
 BINDIR = bin
 TESTDIR = test
+TOOLSDIR = tools
 
 # folders for external libraries
 WIGDIR = $(EXTDIR)/wigxjpf
@@ -39,7 +40,7 @@ INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
 
 _OBJS =  mcmc.o  hash_21j_symbols.o python_mirror.o
 
-_TESTS = test_jsymbols Metropolis_Hastings_parallel_run Hashing_21j 
+_TOOLS = test_jsymbols Metropolis_Hastings_parallel_run Hashing_21j 
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
 TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))
@@ -49,22 +50,22 @@ TOOLS = $(patsubst %,$(BINDIR)/%,$(_TOOLS))
 # library/src object files 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCS)
 	@echo "   CXX    $@"
-	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c -o $@ $< 
+	$(QUIET)mkdir -p $(dir $@)
+	$(QUIET)$(CXX) $(CXXFLAGS) -c -o $@ $< 
 
 
 # shared library
 $(LIBDIR)/libspinfoam.so: $(OBJS)
 	@echo "   CXX    $@"
-	mkdir -p $(dir $@)
-	$(CXX) -shared $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) 
+	$(QUIET)mkdir -p $(dir $@)
+	$(QUIET)$(CXX) -shared $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS) 
 
 	
-# compile test programs
-$(BINDIR)/%: $(TESTDIR)/%.cpp $(OBJS)
+# compile tools programs
+$(BINDIR)/%: $(TOOLSDIR)/%.cpp $(OBJS)
 	@echo "   CXX    $@"
-	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -o $@ -Iinc/ $< -Llib/ $(LDFLAGS) -lspinfoam $(LDLIBS)	
+	$(QUIET)mkdir -p $(dir $@)
+	$(QUIET)$(CXX) $(CXXFLAGS) -o $@ -Iinc/ $< -Llib/ $(LDFLAGS) -lspinfoam $(LDLIBS)	
 
 ###############################################################################################
 
@@ -72,11 +73,11 @@ $(BINDIR)/%: $(TESTDIR)/%.cpp $(OBJS)
 
 default: all
 
-all: lib tests 
+all: lib generate_executable 
 
 lib: $(LIBDIR)/libspinfoam.so
 
-tests: lib $(TESTS)
+generate_executable: lib $(TOOLS)
 
 clean:
 	rm -rf $(OBJDIR)

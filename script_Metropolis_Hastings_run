@@ -12,9 +12,9 @@ DRAWS_STORE_PATH=./data_folder/collected_draws
 
 DSPIN=5
 
-LENGTH=100
+LENGTH=300
 
-SIGMA=0.38
+SIGMA=0.10
 
 BURNIN=10
 

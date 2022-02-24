@@ -102,9 +102,9 @@ public:
   // coefficient for truncated proposal
   double **Ct;
 
-  int  ti_max;
-  int  i_max;
-  int  dim_intertw_space;
+  int ti_max;
+  int i_max;
+  int dim_intertw_space;
 
   // containers for draws, with space at the end for multeplicity
   int draw[BIN_SIZE];
@@ -134,13 +134,12 @@ public:
         length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned),
         verbosity(verbosity_assigned), chain_id(thread_id_assigned)
   {
-
     sprintf(tmp, "j_%.8g", ((double)(dspin) / 2.0));
 
     hashed_tables_path_assigned = hashed_tables_path_assigned + "/hashed_21j_symbols_" + std::string(tmp);
 
     h = hash;
-    
+
     ti_max = 2 * dspin;
     i_max = 0.5 * ti_max;
     dim_intertw_space = (ti_max - 0) / 2 + 1;
@@ -228,16 +227,13 @@ public:
     }
   }
 
-  // TODO: eliminate this
   void print_statistics()
   {
-
     std::cout << (acceptance_ratio * 100 / length) << "% of draws have been accepted" << std::endl;
   }
 
   void store_draws()
   {
-
     char tmp[1024];
 
     sprintf(tmp, "/j_%.8g", ((double)(dspin) / 2.0));
@@ -246,7 +242,7 @@ public:
 
     std::filesystem::create_directories(store_path);
 
-    sprintf(tmp, "/N_%d__sigma_%.8g__burnin_%.d_chain_%.d.csv", length, sigma, burnin, chain_id);
+    sprintf(tmp, "/N_%d__sigma_%02g__burnin_%.d_chain_%.d.csv", length, sigma, burnin, chain_id);
 
     store_path += std::string(tmp);
 
