@@ -16,16 +16,13 @@
 #include "progressbar.h"
 
 // load fastwigx and wigxjpf tables found in given path
-void init(std::string root_folder_string, const int verbosity);
+void init(std::string root_folder_string);
 
 // release fastwigx and wigxjpf tables
 void release();
 
 // TODO add dynamic path
 void Hash_21j_symbols(std::string hash_tables_store_path, const int tj);
-
-// test fastwig tables
-int test_fastwig(std::string fastwing_tables_folder);
 
 
 struct MyKey

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
+
+FASTWIG_TABLES_PATH=./ext/fastwig_tables/
+
+HASH_TABLES_STORE_PATH=./ext/hashed_21j/ 
+
+DSPIN=4
+
+now=$(date)
+echo
+echo "Starting hashing 21j symbols... [ DSPIN = ${DSPIN} ]... (now: $now)"
+
+bin/Hashing_21j    $DSPIN    $HASH_TABLES_STORE_PATH    $FASTWIG_TABLES_PATH 
+
+now=$(date)
+echo
+echo "... completed! (now: $now)"
+

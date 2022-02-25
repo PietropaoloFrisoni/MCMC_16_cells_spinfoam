@@ -5,7 +5,7 @@ int main(int argc, char **argv)
 {
     if (argc < 9)
     {
-        fprintf(stderr, "\n\nError: too few arguments!\nRun the script as: %s [NUMBER_OF_THREADS] [DSPIN] [LENGTH] [SIGMA] [BURNIN] [VERBOSITY] [DRAWS_STORE_PATH] [HASH_TABLES_STORE_PATH]\n\n", argv[0]);
+        fprintf(stderr, "\n\nError: too few arguments.\nRun the script as: %s [NUMBER_OF_THREADS] [DSPIN] [LENGTH] [SIGMA] [BURNIN] [VERBOSITY] [DRAWS_STORE_PATH] [HASH_TABLES_STORE_PATH]\n\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 

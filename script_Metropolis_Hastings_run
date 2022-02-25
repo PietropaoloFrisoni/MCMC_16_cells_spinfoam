@@ -2,17 +2,15 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-export OMP_NUM_THREADS=12
+export OMP_NUM_THREADS=6
 
-FASTWIG_TABLES_PATH=./data_folder/fastwig_tables/
-
-HASH_TABLES_STORE_PATH=./data_folder/hashed_21j/
+HASH_TABLES_STORE_PATH=./ext/hashed_21j/
 
 DRAWS_STORE_PATH=./data_folder/collected_draws
 
-DSPIN=2
+DSPIN=4
 
-LENGTH=1000000
+LENGTH=10000
 
 SIGMA=0.38
 

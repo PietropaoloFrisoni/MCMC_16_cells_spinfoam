@@ -30,3 +30,5 @@ The library has been tested with GCC version 8.1 or greater.
 (...)
 
 ## Usage (Python interface)
+
+See the Jupyter notebook **Python_interface**
