@@ -10,11 +10,11 @@ HASH_TABLES_STORE_PATH=./data_folder/hashed_21j/
 
 DRAWS_STORE_PATH=./data_folder/collected_draws
 
-DSPIN=5
+DSPIN=3
 
-LENGTH=300
+LENGTH=30000
 
-SIGMA=0.10
+SIGMA=0.40
 
 BURNIN=10
 

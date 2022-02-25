@@ -9,7 +9,6 @@ OBJDIR = obj
 INCDIR = inc
 LIBDIR = lib
 BINDIR = bin
-TESTDIR = test
 TOOLSDIR = tools
 
 # folders for external libraries
@@ -40,10 +39,9 @@ INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
 
 _OBJS =  mcmc.o  hash_21j_symbols.o python_mirror.o
 
-_TOOLS = test_jsymbols Metropolis_Hastings_parallel_run Hashing_21j 
+_TOOLS = Metropolis_Hastings_parallel_run Hashing_21j 
 
 OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
-TESTS = $(patsubst %,$(BINDIR)/%,$(_TESTS))
 TOOLS = $(patsubst %,$(BINDIR)/%,$(_TOOLS))
 
 

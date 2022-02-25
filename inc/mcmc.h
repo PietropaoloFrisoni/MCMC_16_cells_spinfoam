@@ -102,9 +102,9 @@ public:
   // coefficient for truncated proposal
   double **Ct;
 
-  int ti_max;
-  int i_max;
-  int dim_intertw_space;
+  int const ti_max;
+  int const i_max;
+  int const dim_intertw_space;
 
   // containers for draws, with space at the end for multeplicity
   int draw[BIN_SIZE];
@@ -130,23 +130,17 @@ public:
         const int length_assigned, const double sigma_assigned, const int burnin_assigned,
         const int verbosity_assigned, const int thread_id_assigned, const std::shared_ptr<Hash> hash)
       : store_path(store_path_assigned), hashed_tables_path(hashed_tables_path_assigned),
-        dspin(dspin_assigned),
+        dspin(dspin_assigned), h(hash), i_max(dspin_assigned), ti_max(2 * dspin_assigned), dim_intertw_space(dspin_assigned + 1),
         length(length_assigned), sigma(sigma_assigned), burnin(burnin_assigned),
         verbosity(verbosity_assigned), chain_id(thread_id_assigned)
   {
+    // build path for 21j symbols
     sprintf(tmp, "j_%.8g", ((double)(dspin) / 2.0));
-
     hashed_tables_path_assigned = hashed_tables_path_assigned + "/hashed_21j_symbols_" + std::string(tmp);
-
-    h = hash;
-
-    ti_max = 2 * dspin;
-    i_max = 0.5 * ti_max;
-    dim_intertw_space = (ti_max - 0) / 2 + 1;
 
     collected_draws = new int *[length];
 
-    // This allocates several little chunks of memory
+    // Allocating several chunks of memory
     for (int i = 0; i < length; i++)
     {
       // 16 indices + multiplicity of the draw
@@ -155,6 +149,7 @@ public:
 
     collected_amplitudes = new double[length];
 
+    // bounds for 'internal' spins
     tb1_min = tb5_min = 0;
     tb1_max = tb5_max = 2 * dspin;
 

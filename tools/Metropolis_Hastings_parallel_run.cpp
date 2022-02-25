@@ -9,6 +9,8 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
+    // flag parsing
+    // TODO: add parameter checks
     int const number_of_threads = std::stoi(argv[1]);
     int const dspin_assigned = std::stoi(argv[2]);
     int const length_assigned = std::stoi(argv[3]);
