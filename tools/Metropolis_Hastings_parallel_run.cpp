@@ -23,5 +23,7 @@ int main(int argc, char **argv)
     MH_parallel_run(&draws_store_path_assigned[0], &hash_tables_path_assigned[0], dspin_assigned, length_assigned,
                     sigma_assigned, burnin_assigned, verbosity_assigned, number_of_threads);
 
+    std::cout << "\nCompleted!" << std::endl;
+
     return EXIT_SUCCESS;
 }

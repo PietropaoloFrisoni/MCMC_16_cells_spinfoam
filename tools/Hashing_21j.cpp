@@ -18,4 +18,8 @@ int main(int argc, char **argv)
    Hash_21j_symbols(hashed_tables_path_assigned, dspin_assigned);
 
    release();
+
+   std::cout << "\nCompleted!" << std::endl;
+
+   return EXIT_SUCCESS;
 }

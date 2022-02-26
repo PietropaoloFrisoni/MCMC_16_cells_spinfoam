@@ -1,6 +1,6 @@
 # Computation of 16 cell spinfoam amplitude
 
-(...)
+Code for the computation of the 16 cell spinfoam amplitude, boundary observables and correlation functions.
 
 ## Dependencies
 
@@ -8,27 +8,22 @@ The library depends on:
 
 1. GNU GSL
 2. quadmath (GCC extension)
-3. _wigxjpf_ and _fastwigxj_ [Johansson et al., 2015]
-4. OpenMP
-5. _parallelhashmap_  [Git repository](https://github.com/greg7mdp/parallel-hashmap) 
-6. _progressbar_ (optional) [Git repository](https://github.com/gipert/progressbar) 
+3. OpenMP
+4. _wigxjpf_ and _fastwigxj_ [Johansson et al., 2015]
+5. [parallel hashmap](https://github.com/greg7mdp/parallel-hashmap) 
+6. [progressbar](https://github.com/gipert/progressbar) (optional) 
 7. Python (optional)
-8. Python modules: ctypes, os, threading (optional)
+8. Python modules: ctypes, os, threading (optional) multiprocessing 
 
 ## Compilation
 
-The programs can be compiled typing `make`. This compiles the shared library and the tools programs. There are additional flags that can be provided. For example:
+The source code can be compiled with `make`. This creates the _spinfoam_ shared library, the object files and the binary files. Type `make DEBUG=1` in order to build the debug version.
 
-- type `make DEBUG=1` to build the debug version
+The shared library searches for specific folders and files depending on the type of computation (see `Usage` below for details). 
 
-The shared library searches for folders `wigxjpf`, `fastwigxj` and `parallel_hashmap` under `ext/`. It also searches for folders `fastwig_tables` and `hashed_21j` under `data_folder/`.
-The library has been tested with GCC version 8.1 or greater.
+The _spinfoam_ shared library has been tested with GCC version 8.1 or greater.
 
-
-## Usage (C++ interface)
-
-(...)
 
 ## Usage (Python interface)
 
-See the Jupyter notebook **Python_interface**
+See the Jupyter notebook **Python_interface**.

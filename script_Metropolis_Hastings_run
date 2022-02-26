@@ -4,7 +4,7 @@ export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
 export OMP_NUM_THREADS=6
 
-HASH_TABLES_STORE_PATH=./ext/hashed_21j/
+HASH_TABLES_STORE_PATH=./ext/hashed_21j/fregnazza
 
 DRAWS_STORE_PATH=./data_folder/collected_draws
 
@@ -24,7 +24,4 @@ echo "Starting Metropolis-Hastings algorithm... [ NUM_OF_THREADS = ${OMP_NUM_THR
 
 bin/Metropolis_Hastings_parallel_run  $OMP_NUM_THREADS  $DSPIN  $LENGTH  $SIGMA  $BURNIN  $VERBOSITY  $DRAWS_STORE_PATH  $HASH_TABLES_STORE_PATH
             
-now=$(date)
-echo
-echo "... completed! (now: $now)"
 

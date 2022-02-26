@@ -13,18 +13,25 @@ int MH_parallel_run(char *draws_store_path_assigned_charp, char *hashed_tables_p
     sprintf(tmp, "j_%.8g", ((double)(dspin_assigned) / 2.0));
     std::string path = hashed_tables_path_assigned + "/hashed_21j_symbols_" + std::string(tmp);
 
-    auto hash = std::make_shared<Chain::Hash>();
-    phmap::BinaryInputArchive ar_in(path.c_str());
-    hash->phmap_load(ar_in);
+    if (!std::filesystem::exists(path))
+    {
+        error("No hash table of 21j symbols with same provided spin found in folder");
+    }
+    else
+    {
+        auto hash = std::make_shared<Chain::Hash>();
+        phmap::BinaryInputArchive ar_in(path.c_str());
+        hash->phmap_load(ar_in);
 
 #pragma omp parallel for
-    for (auto thread_id = 0; thread_id < number_of_threads; thread_id++)
-    {
+        for (auto thread_id = 0; thread_id < number_of_threads; thread_id++)
+        {
 
-        Chain test_chain(draws_store_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned,
-                         sigma_assigned, burnin_assigned, verbosity, thread_id + 1, hash);
+            Chain test_chain(draws_store_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned,
+                             sigma_assigned, burnin_assigned, verbosity, thread_id + 1, hash);
 
-        Metropolis_Hastings_run(test_chain);
+            Metropolis_Hastings_run(test_chain);
+        }
     }
 
     return EXIT_SUCCESS;

@@ -1,5 +1,7 @@
 #include "hash_21j_symbols.h"
 
+#include <filesystem>
+
 char *FASTWIG_3J_TABLE_PATH;
 char *FASTWIG_6J_TABLE_PATH;
 char *FASTWIG_9J_TABLE_PATH;
@@ -178,6 +180,8 @@ void release()
 
 void Hash_21j_symbols(std::string hash_tables_store_path, const int tj)
 {
+
+  std::filesystem::create_directories(hash_tables_store_path);
 
   char tmp[1024];
 
