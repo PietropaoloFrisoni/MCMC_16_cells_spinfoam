@@ -2,13 +2,13 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-export OMP_NUM_THREADS=6
+export OMP_NUM_THREADS=1
 
-HASH_TABLES_STORE_PATH=./ext/hashed_21j/fregnazza
+HASH_TABLES_STORE_PATH=./ext/hashed_21j/
 
 DRAWS_STORE_PATH=./data_folder/collected_draws
 
-DSPIN=4
+DSPIN=3
 
 LENGTH=10000
 
@@ -16,7 +16,7 @@ SIGMA=0.38
 
 BURNIN=10
 
-VERBOSITY=0
+VERBOSITY=1
 
 now=$(date)
 echo
