@@ -2,7 +2,7 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=6
 
 HASH_TABLES_STORE_PATH=./ext/hashed_21j/
 
@@ -16,7 +16,7 @@ SIGMA=0.38
 
 BURNIN=10
 
-VERBOSITY=1
+VERBOSITY=0
 
 now=$(date)
 echo

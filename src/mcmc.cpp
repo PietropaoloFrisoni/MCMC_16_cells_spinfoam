@@ -9,7 +9,9 @@ void Metropolis_Hastings_run(Chain &chain)
     // initializes the PRNG
     gsl_rng *ran;
     ran = gsl_rng_alloc(gsl_rng_taus2);
-    gsl_rng_set(ran, (uint64_t)(random()));
+
+    // without "+ chain.chain_id" all the chains are exactly the same
+    gsl_rng_set(ran, (uint64_t)(random() + chain.chain_id)); 
 
     double rd;
     double r0, interval;
