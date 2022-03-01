@@ -2,7 +2,7 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-FASTWIG_TABLES_PATH=./ext/fastwig_tables
+FASTWIG_TABLES_PATH=./ext/fastwigxj_generated_tables
 
 HASH_TABLES_STORE_PATH=./ext/hashed_21j 
 

@@ -14,6 +14,8 @@
 make clean
 
 module load gsl
+module load intel
+module load StdEnv/2020
 
 make
 
@@ -31,7 +33,7 @@ HASH_TABLES_STORE_PATH=./data_folder/hashed_21j/
 
 DRAWS_STORE_PATH=./data_folder/collected_draws
 
-DSPIN=4
+DSPIN=6
 
 LENGTH=1000000
 
