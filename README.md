@@ -17,7 +17,9 @@ The library depends on:
 
 ## Compilation
 
-The source code can be compiled with `make`. This creates the _spinfoam_ shared library, the object files and the binary files. Type `make DEBUG=1` in order to build the debug version.
+The C++ source code can be compiled with `make` after that both _wigxjpf_ and _fastwigxj_ have been compiled as well. 
+
+This creates the _spinfoam_ shared library, the object files and the binary files. Type `make DEBUG=1` in order to build the debug version.
 
 The shared library searches for specific folders and files depending on the type of computation (see `Usage` below for details). 
 
