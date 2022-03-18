@@ -1,13 +1,13 @@
 #include "python_mirror.h"
 
-int MH_parallel_run(char *draws_store_path_assigned_charp, char *hashed_tables_path_assigned_charp, int dspin_assigned, int length_assigned,
+int MH_parallel_run(char *data_folder_path_assigned_char, char *hashed_tables_path_assigned_char, int dspin_assigned, int length_assigned,
                     double sigma_assigned, int burnin_assigned, int verbosity, int number_of_threads)
 {
 
     // TODO: clean this mess between strings and char pointers
 
-    std::string draws_store_path_assigned(draws_store_path_assigned_charp);
-    std::string hashed_tables_path_assigned(hashed_tables_path_assigned_charp);
+    std::string data_folder_path_assigned(data_folder_path_assigned_char);
+    std::string hashed_tables_path_assigned(hashed_tables_path_assigned_char);
 
     char tmp[1024];
     sprintf(tmp, "j_%.8g", ((double)(dspin_assigned) / 2.0));
@@ -27,7 +27,7 @@ int MH_parallel_run(char *draws_store_path_assigned_charp, char *hashed_tables_p
         for (auto thread_id = 0; thread_id < number_of_threads; thread_id++)
         {
 
-            Chain test_chain(draws_store_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned,
+            Chain test_chain(data_folder_path_assigned, hashed_tables_path_assigned, dspin_assigned, length_assigned,
                              sigma_assigned, burnin_assigned, verbosity, thread_id + 1, hash);
 
             Metropolis_Hastings_run(test_chain);

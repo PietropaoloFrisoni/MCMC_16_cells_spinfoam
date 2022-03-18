@@ -231,13 +231,13 @@ public:
   {
     char tmp[1024];
 
-    sprintf(tmp, "/j_%.8g", ((double)(dspin) / 2.0));
+    sprintf(tmp, "/j_%.8g/N_%d__sigma_%02g__burnin_%.d/draws", ((double)(dspin) / 2.0), length, sigma, burnin);
 
     store_path += std::string(tmp);
 
     std::filesystem::create_directories(store_path);
 
-    sprintf(tmp, "/N_%d__sigma_%02g__burnin_%.d_chain_%.d.csv", length, sigma, burnin, chain_id);
+    sprintf(tmp, "/draws_chain_%.d.csv", chain_id);
 
     store_path += std::string(tmp);
 

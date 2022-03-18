@@ -17,10 +17,10 @@ int main(int argc, char **argv)
     double const sigma_assigned = std::stof(argv[4]);
     int const burnin_assigned = std::stoi(argv[5]);
     int const verbosity_assigned = std::stoi(argv[6]);
-    std::string draws_store_path_assigned = argv[7];
+    std::string store_path_assigned = argv[7];
     std::string hash_tables_path_assigned = argv[8];
 
-    MH_parallel_run(&draws_store_path_assigned[0], &hash_tables_path_assigned[0], dspin_assigned, length_assigned,
+    MH_parallel_run(&store_path_assigned[0], &hash_tables_path_assigned[0], dspin_assigned, length_assigned,
                     sigma_assigned, burnin_assigned, verbosity_assigned, number_of_threads);
 
     std::cout << "\nCompleted!" << std::endl;
