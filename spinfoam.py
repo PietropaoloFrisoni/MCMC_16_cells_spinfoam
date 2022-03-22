@@ -61,8 +61,6 @@ def from_draws_to_angles(folder_prefix, spin, length, burnin, angle_path, chain_
         'total accept. rate', 'total run time'
     ])
     
-    df.to_csv("/home/frisus95/Scrivania/bug.csv")
-    
     # from csv to matrix in order to use the numpy optimized routines
     angles_matrix = np.matrix(df.values.transpose()).astype(float)
     
