@@ -105,6 +105,101 @@ def from_draws_to_angles(folder_prefix, spin, length, burnin, angle_path, chain_
     df.to_csv(angle_path_chain, index=True)
     
     
+def from_draws_to_angles_correlations(folder_prefix, spin, length, burnin, angle_correlations_path, chain_id): 
+
+    # load in memory the stored draws
+    draw_path = f"{folder_prefix}/draws/draws_chain_{chain_id}.csv"
+    df = pd.read_csv(draw_path, low_memory=False) 
+  
+    # retrieving relevant parameters
+    multeplicity = df[['draw multeplicity']].to_numpy().astype(int)
+    total_accept_draws = int(df['total accept. draws'][0])
+    total_accept_rate = float(df['total accept. rate'][0].strip('%'))
+    total_run_time = float(df['total run time'][0].strip(' s'))
+    
+    # dropping columns
+    df = df.drop(columns=[
+        'draw multeplicity', 'draw amplitude', 'total accept. draws',
+        'total accept. rate', 'total run time'
+    ])
+    
+    # from csv to matrix in order to use the numpy optimized routines
+    angles_matrix = np.matrix(df.values).astype(float)
+    
+    # from intertwiners to angles 
+    angles_matrix = np.vectorize(from_intertwiner_to_angle)(angles_matrix, spin) 
+ 
+    indices_collection = []
+    values_collection = []    
+        
+    for node_1 in range(16):
+    
+        for node_2 in range(node_1, 16):
+
+            corr = 0.0
+
+            for n in range(total_accept_draws):
+
+                corr += angles_matrix[n, node_1]*angles_matrix[n, node_2]*multeplicity[n]
+    
+            corr /= (length - burnin)    
+            
+            indices_collection.append(f"<O({node_1+1}),O({node_2+1})>")
+            values_collection.append(corr[0])
+    
+    
+    df = pd.DataFrame(
+        {                
+             f'j={spin}': values_collection[:],  
+        },
+        index = indices_collection)
+            
+    angle_correlations_path_chain = f"{angle_correlations_path}/angles_correlations_chain_{chain_id}.csv"
+    df = df.T
+    df.to_csv(angle_correlations_path_chain, index=True)       
+      
+    
+def angles_correlations_compute(data_folder, spin, length,
+                                sigma, burnin, number_of_threads):   
+                   
+    folder_prefix = f"{data_folder}/j_{spin}/N_{length}__sigma_{sigma}__burnin_{burnin}"
+    chain_id_collection = []
+    
+    for chain_id in range(1, number_of_threads + 1):
+        draw_path = f"{folder_prefix}/draws/draws_chain_{chain_id}.csv"
+        if (os.path.isfile(draw_path)):
+            chain_id_collection.append(chain_id)
+        else:
+            warnings.warn("Warning: the draw %s was not found" % (draw_path))
+            
+    chains_to_assemble = len(chain_id_collection)        
+
+    if (chains_to_assemble != 0):
+    
+        angle_correlations_path = f"{folder_prefix}/operators/angles_correlations"
+        os.makedirs(angle_correlations_path, exist_ok=True)
+        
+        print(f'Converting {chains_to_assemble} chains from draws to angles correlations...')
+        
+        threads = []
+        for chain_id in chain_id_collection:
+            t = threading.Thread(target=from_draws_to_angles_correlations,
+                                 args=(folder_prefix, 
+                                       spin, length, burnin,
+                                       angle_correlations_path, 
+                                       chain_id,
+                                      ))
+            threads.append(t)
+            t.start()
+
+        # wait for the threads to complete
+        for t in threads:
+            t.join()    
+            
+        print(f'Completed! All draws have been processed')     
+        
+        
+        
 
 def angles_compute(data_folder, spin, length,
                    sigma, burnin, number_of_threads):   
