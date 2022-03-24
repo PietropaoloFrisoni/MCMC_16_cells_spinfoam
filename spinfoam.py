@@ -290,6 +290,17 @@ def retrieve_combined_angles(data_folder, spin, chains_combined):
     return df
 
 
+def retrieve_correlations(data_folder, spin, length,
+                                sigma, burnin, chain_id=1):
+    
+    folder_prefix = f"{data_folder}/j_{spin}/N_{length}__sigma_{sigma}__burnin_{burnin}"
+    angle_correlations_path = f"{folder_prefix}/operators/angles_correlations"
+    angle_correlations_path_chain = f"{angle_correlations_path}/angles_correlations_chain_{chain_id}.csv"
+    
+    df = pd.read_csv(angle_correlations_path_chain, index_col=0)
+    return df
+
+
 
 # starts an independent Markov chain for every assigned thread
 def Metropolis_Hastings_parallel_run(data_folder, hash_tables_path, spin,
