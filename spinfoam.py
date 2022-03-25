@@ -105,7 +105,7 @@ def from_draws_to_angles(folder_prefix, spin, length, burnin, angle_path, chain_
     df.to_csv(angle_path_chain, index=True)
     
     
-def from_draws_to_angles_correlations(folder_prefix, spin, length, burnin, angle_correlations_path, chain_id): 
+def from_draws_to_angles_correlations(folder_prefix, spin, length, burnin, angle_correlations_path, chain_id=1): 
 
     # load in memory the stored draws
     draw_path = f"{folder_prefix}/draws/draws_chain_{chain_id}.csv"
@@ -132,21 +132,14 @@ def from_draws_to_angles_correlations(folder_prefix, spin, length, burnin, angle
     indices_collection = []
     values_collection = []    
         
-    for node_1 in range(16):
-    
+    for node_1 in range(16):    
         for node_2 in range(node_1, 16):
-
             corr = 0.0
-
             for n in range(total_accept_draws):
-
                 corr += angles_matrix[n, node_1]*angles_matrix[n, node_2]*multeplicity[n]
-    
             corr /= (length - burnin)    
-            
             indices_collection.append(f"<O({node_1+1}),O({node_2+1})>")
             values_collection.append(corr[0])
-    
     
     df = pd.DataFrame(
         {                
