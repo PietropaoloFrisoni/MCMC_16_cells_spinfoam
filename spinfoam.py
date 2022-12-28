@@ -8,14 +8,11 @@ import logging
 import re
 import glob
 
-
+# ignore everything except the message
 def custom_formatwarning(msg, *args, **kwargs):
-    # ignore everything except the message
     return str(msg) + '\n'
 
-
 warnings.formatwarning = custom_formatwarning
-
 
 # compile for optimized performance
 def spinfoam_compile():
