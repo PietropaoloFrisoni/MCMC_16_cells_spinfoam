@@ -12,8 +12,8 @@ The library depends on:
 4. _wigxjpf_ and _fastwigxj_ [Johansson et al., 2015]
 5. [parallel hashmap](https://github.com/greg7mdp/parallel-hashmap) 
 6. [progressbar](https://github.com/gipert/progressbar) (optional) 
-7. Python (optional)
-8. Python modules: ctypes, os, threading (optional) multiprocessing 
+7. [atpbar](https://github.com/alphatwirl/atpbar)
+8. Python
 
 ## Compilation
 
@@ -26,6 +26,6 @@ The shared library searches for specific folders and files depending on the type
 The _spinfoam_ shared library has been tested with GCC version 8.1 or greater.
 
 
-## Usage (Python interface)
+## Usage
 
-See the Jupyter notebook **Python_interface**.
+The C++ code can be executed with a shell script (see `scripts`) or via Python (see the notebook *Python_interface*).
