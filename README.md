@@ -13,11 +13,11 @@ The library depends on:
 5. [parallel hashmap](https://github.com/greg7mdp/parallel-hashmap) 
 6. [progressbar](https://github.com/gipert/progressbar) (optional) 
 7. [atpbar](https://github.com/alphatwirl/atpbar)
-8. Python
+8. Python (≥ 3.6)
 
 ## Compilation
 
-The C++ source code can be compiled with `make` after that both _wigxjpf_ and _fastwigxj_ have been compiled as well. 
+The C++ source code can be compiled with `make` after that both _wigxjpf_ and _fastwigxj_ have been compiled. 
 
 This creates the _spinfoam_ shared library, the object files and the binary files. Type `make DEBUG=1` in order to build the debug version.
 
@@ -29,3 +29,7 @@ The _spinfoam_ shared library has been tested with GCC version 8.1 or greater.
 ## Usage
 
 The C++ code can be executed with a shell script (see `scripts`) or via Python (see the notebook *Python_interface*).
+
+It runs a Markov Chain for each provided thread and stores the states in a folder of your choice.
+
+The states are used to compute observables and correlations functions in the notebook *Operators* (see `notebooks`), using Pandas.
