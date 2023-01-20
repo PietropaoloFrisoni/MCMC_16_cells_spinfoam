@@ -74,11 +74,11 @@ To build, it need to be placed alongside fastwigxj in the directory
 structure.  Short build instructions:
 
 cd ..
-wget http://fy.chalmers.se/subatom/wigxjpf/wigxjpf-1.10.tar.gz
-tar -zxvf wigxjpf-1.10.tar.gz
-cd wigxjpf-1.10
+wget http://fy.chalmers.se/subatom/wigxjpf/wigxjpf-1.11.tar.gz
+tar -zxvf wigxjpf-1.11.tar.gz
+cd wigxjpf-1.11
 make
-cd ../fastwigxj-1.4
+cd ../fastwigxj-1.4.1
 
 The build of FASTWIGXJ will automatically use the version of
 WIGXJPF found with the highest version number (searching ../wigxjpf*/).

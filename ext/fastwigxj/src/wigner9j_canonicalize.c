@@ -654,3 +654,20 @@ inline uint64_t wigner9j_canonicalise(const int *two_jv)
 
   return (uint64_t) reg_to_xmm[0];
 }
+
+/* The miscompilation leads to most of wigner9j_canonicalise() being
+ * optimised away.  The issue is found with 'make test'.
+ *
+ * Use some other compiler.
+ *
+ * In principle error happens only with AVX2.
+ */
+
+#if FASTWIGXJ_HAVE_AVX2
+# ifdef __GNUC__
+#  if (__GNUC__ == 10) || (__GNUC__ == 11)
+#   error "GCC versions 10 and 11 are known to miscompile " \
+          "wigner9j_canonicalise() with AVX2.  Use another compiler."
+#  endif
+# endif
+#endif

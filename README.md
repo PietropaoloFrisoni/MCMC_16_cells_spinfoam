@@ -9,7 +9,7 @@ The library depends on:
 1. GNU GSL
 2. quadmath (GCC extension)
 3. OpenMP
-4. _wigxjpf_ and _fastwigxj_ [Johansson et al., 2015]
+4. [wigxjpf](http://fy.chalmers.se/subatom/wigxjpf/) and [fastwigxj](http://fy.chalmers.se/subatom/fastwigxj/)
 5. [parallel hashmap](https://github.com/greg7mdp/parallel-hashmap) 
 6. [progressbar](https://github.com/gipert/progressbar) (optional) 
 7. [atpbar](https://github.com/alphatwirl/atpbar)

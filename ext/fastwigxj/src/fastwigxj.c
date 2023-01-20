@@ -681,6 +681,8 @@ void wig369j_ht_dyn_reduce(struct wigner369j_dyn_table *dyn_table,
 	  (remove_below + table_recent + 1) & 0xff,
 	  table_recent, dyn_table->_table_used, used, moved);
   */
+  (void) used;
+  (void) moved;
   stats->_dyn_table_reduce++;
 }
 
