@@ -26,8 +26,7 @@ The _spinfoam_ shared library has been tested with GCC version 8.1 or greater.
 ## Usage
 
 The C++ code can be executed with a shell script (see `scripts`) or via Python (see the notebook *python_interface*). 
-
 It runs a Markov Chain for each provided thread and stores the states in a folder chosen by the user. 
-The code style is hybrid between modern C++ and old C. Unfortunately, I do not have time to update and improve the code style, as this project as been realized as final assignment of a Scientific Computing course with a restrictive deadline. 
+The code style is hybrid between modern C++ and old C. Unfortunately, I do not have time to update and improve it, as this project as been realized as final assignment of a Scientific Computing course with a restrictive deadline. 
 
-The states are used to compute observables and correlations functions in the notebook *Operators* (see `notebooks`).
+The states stored during the random walk Metropolis-Hastings algorithm are used to compute spinfoam observables and correlations functions in the notebook *Operators* (see `notebooks`). The statistical and data analysis is performed using _pandas_. 
