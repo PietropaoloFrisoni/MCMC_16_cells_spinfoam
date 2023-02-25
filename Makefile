@@ -35,9 +35,9 @@ LDLIBS = -ldl -lgsl -lgslcblas -lwigxjpf -lfastwigxj -lm -lwigxjpf_quadmath -lqu
 
 ###############################################################################################
 
-INCS = inc/mcmc.h inc/error.h inc/common.h inc/hash_21j_symbols.h
+INCS = $(INCDIR)/chain_class.h $(INCDIR)/mcmc.h $(INCDIR)/error.h $(INCDIR)/common.h $(INCDIR)/hash_21j_symbols.h
 
-_OBJS =  mcmc.o  hash_21j_symbols.o python_mirror.o
+_OBJS = chain_class.o mcmc.o hash_21j_symbols.o python_mirror.o
 
 _TOOLS = Metropolis_Hastings_parallel_run Hashing_21j 
 

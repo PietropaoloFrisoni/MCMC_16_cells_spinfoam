@@ -1,6 +1,5 @@
-#include "hash_21j_symbols.h"
-
 #include <filesystem>
+#include "hash_21j_symbols.h"
 
 char *FASTWIG_3J_TABLE_PATH;
 char *FASTWIG_6J_TABLE_PATH;
