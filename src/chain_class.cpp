@@ -84,6 +84,12 @@ void Chain::trunc_coeff_print(double **Ct, int dspin)
     }
 }
 
+void Chain::draw_print(int *draw) 
+{ 
+    // TODO
+}
+
+
 void Chain::ampl_print(double *ampl) { std::cout << *ampl << std::endl; }
 
 void Chain::print_collected_draws()

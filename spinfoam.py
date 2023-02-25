@@ -44,6 +44,7 @@ def Metropolis_Hastings_parallel_run(data_folder, hash_tables_path, spin,
                                                      c_double(sigma), burnin,
                                                      verbosity,
                                                      number_of_threads)
+    
     print(f'Completed! All draws have been stored')
 
 # hashing of 21j Wigner symbols
