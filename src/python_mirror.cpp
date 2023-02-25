@@ -4,7 +4,7 @@ int MH_parallel_run(char *data_folder_path_assigned_char, char *hashed_tables_pa
                     double sigma_assigned, int burnin_assigned, int verbosity, int number_of_threads)
 {
 
-    // TODO: clean this mess between strings and char pointers
+    // TODO: clean mess between strings and char pointers (fastwigxj is written in C)
 
     std::string data_folder_path_assigned(data_folder_path_assigned_char);
     std::string hashed_tables_path_assigned(hashed_tables_path_assigned_char);

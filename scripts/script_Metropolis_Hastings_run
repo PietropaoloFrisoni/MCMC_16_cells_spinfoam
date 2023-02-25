@@ -4,9 +4,9 @@ export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
 export OMP_NUM_THREADS=12
 
-HASH_TABLES_STORE_PATH=./ext/hashed_21j/
+HASH_TABLES_STORE_PATH=./data_folder/21j_hash_tables/
 
-STORE_PATH=./data_folder/
+STORE_PATH=./data_folder/data/
 
 DSPIN=1
 
