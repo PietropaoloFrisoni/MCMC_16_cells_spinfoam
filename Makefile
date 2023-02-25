@@ -74,21 +74,23 @@ default: all
 all: precompile_wigxjpf_fastwigxj lib generate_executable 
 
 precompile_wigxjpf_fastwigxj: 
-	@echo "Compiling wigxjpf..."
-	$(QUIET) cd $(EXTDIR)/wigxjpf && make
-	@echo "Compiling fastwigxj..."
-	$(QUIET) cd $(EXTDIR)/fastwigxj && make
+	@echo "compiling wigxjpf..."
+	$(QUIET) cd $(EXTDIR)/wigxjpf && make --no-print-directory
+	@echo "compiling fastwigxj..."
+	$(QUIET) cd $(EXTDIR)/fastwigxj && make --no-print-directory
+	@echo ""
 
 lib: $(LIBDIR)/libspinfoam.so
 
 generate_executable: lib $(TOOLS)
 
 clean:
+	@echo "cleaning wigxjpf..."
+	$(QUIET) cd $(EXTDIR)/wigxjpf && make clean --no-print-directory
+	@echo "cleaning fastwigxj..."
+	$(QUIET) cd $(EXTDIR)/fastwigxj && make clean --no-print-directory
+	@echo ""
 	rm -rf $(OBJDIR)
 	rm -rf $(LIBDIR)
 	rm -rf $(BINDIR)
-	@echo "cleaning wigxjpf..."
-	$(QUIET) cd $(EXTDIR)/wigxjpf && make clean
-	@echo "cleaning fastwigxj..."
-	$(QUIET) cd $(EXTDIR)/fastwigxj && make clean
 

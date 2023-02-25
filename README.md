@@ -17,19 +17,17 @@ The library depends on:
 
 ## Compilation
 
-The C++ source code can be compiled with `make` after that both _wigxjpf_ and _fastwigxj_ have been compiled. 
-
+The C++ source code can be compiled with `make`. The makefile automatically compiles _wigxjpf_ and _fastwigxj_ as well. 
 This creates the _spinfoam_ shared library, the object files and the binary files. Type `make DEBUG=1` in order to build the debug version.
-
 The shared library searches for specific folders and files depending on the type of computation (see `Usage` below for details). 
-
 The _spinfoam_ shared library has been tested with GCC version 8.1 or greater.
 
 
 ## Usage
 
-The C++ code can be executed with a shell script (see `scripts`) or via Python (see the notebook *Python_interface*).
+The C++ code can be executed with a shell script (see `scripts`) or via Python (see the notebook *python_interface*). 
 
-It runs a Markov Chain for each provided thread and stores the states in a folder of your choice.
+It runs a Markov Chain for each provided thread and stores the states in a folder chosen by the user. 
+The code style is hybrid between modern C++ and old C. Unfortunately, I do not have time to update and improve the code style, as this project as been realized as final assignment of a Scientific Computing course with a restrictive deadline. 
 
-The states are used to compute observables and correlations functions in the notebook *Operators* (see `notebooks`), using Pandas.
+The states are used to compute observables and correlations functions in the notebook *Operators* (see `notebooks`).
