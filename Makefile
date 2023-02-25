@@ -71,7 +71,13 @@ $(BINDIR)/%: $(TOOLSDIR)/%.cpp $(OBJS)
 
 default: all
 
-all: lib generate_executable 
+all: precompile_wigxjpf_fastwigxj lib generate_executable 
+
+precompile_wigxjpf_fastwigxj: 
+	@echo "Compiling wigxjpf..."
+	$(QUIET) cd $(EXTDIR)/wigxjpf && make
+	@echo "Compiling fastwigxj..."
+	$(QUIET) cd $(EXTDIR)/fastwigxj && make
 
 lib: $(LIBDIR)/libspinfoam.so
 
@@ -81,4 +87,8 @@ clean:
 	rm -rf $(OBJDIR)
 	rm -rf $(LIBDIR)
 	rm -rf $(BINDIR)
+	@echo "cleaning wigxjpf..."
+	$(QUIET) cd $(EXTDIR)/wigxjpf && make clean
+	@echo "cleaning fastwigxj..."
+	$(QUIET) cd $(EXTDIR)/fastwigxj && make clean
 

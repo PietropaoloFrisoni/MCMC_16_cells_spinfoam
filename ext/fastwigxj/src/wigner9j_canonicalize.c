@@ -663,6 +663,7 @@ inline uint64_t wigner9j_canonicalise(const int *two_jv)
  * In principle error happens only with AVX2.
  */
 
+/*
 #if FASTWIGXJ_HAVE_AVX2
 # ifdef __GNUC__
 #  if (__GNUC__ == 10) || (__GNUC__ == 11)
@@ -671,3 +672,4 @@ inline uint64_t wigner9j_canonicalise(const int *two_jv)
 #  endif
 # endif
 #endif
+*/

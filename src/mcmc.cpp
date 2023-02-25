@@ -1,6 +1,6 @@
 #include "mcmc.h"
 
-void Metropolis_Hastings_run(Chain &chain)
+void Metropolis_Hastings_run(Chain& chain)
 {
 
     // intialize global seed for random()

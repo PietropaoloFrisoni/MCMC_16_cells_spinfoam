@@ -2,16 +2,16 @@
 
 export LD_LIBRARY_PATH="./lib":$LD_LIBRARY_PATH
 
-FASTWIG_TABLES_PATH=./ext/fastwigxj_generated_tables
+FASTWIGXJ_TABLES_PATH=./data_folder/fastwigxj_tables
 
-HASH_TABLES_STORE_PATH=./ext/hashed_21j 
+HASH_TABLES_STORE_PATH=./data_folder/21j_hash_tables 
 
-DSPIN=4
+DSPIN=3
 
 now=$(date)
 echo
 echo "Starting hashing 21j symbols... [ DSPIN = ${DSPIN} ]... (now: $now)"
 
-bin/Hashing_21j    $DSPIN    $HASH_TABLES_STORE_PATH    $FASTWIG_TABLES_PATH 
+bin/Hashing_21j    $DSPIN    $HASH_TABLES_STORE_PATH    $FASTWIGXJ_TABLES_PATH 
 
 
